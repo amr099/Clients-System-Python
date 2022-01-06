@@ -1,16 +1,12 @@
-from calendar import month
 from tkinter import *
 from tkinter import Entry, Label, Tk, ttk, messagebox
 import tkinter as tk
-from tkinter import font
-from babel.core import Locale
-from babel.dates import format_date    
 from openpyxl import load_workbook
 from datetime import date, datetime
 import re
 from openpyxl.workbook import workbook
 from openpyxl.styles import NamedStyle, Font, Border, Side
-from tkcalendar import Calendar,DateEntry
+from tkcalendar import DateEntry
 
 
 file = 'xl.xlsx'
@@ -66,7 +62,7 @@ class Revenue(tk.Toplevel):
                 for sheet in wb.worksheets:
                         ws = sheet
                         for i in range(4, ws.max_row+1):
-                                celldate = date(ws.cell(row=i, column=8).value,ws.cell(row=i, column=9).value,1)
+                                celldate = date(ws.cell(row=i, column=8).value, ws.cell(row=i, column=9).value, ws.cell(row=i, column=10).value)
                                 if celldate >= startdate.get_date() and celldate <= enddate.get_date():
                                         total_revenue += ws.cell(row=i, column=4).value
 
@@ -203,7 +199,7 @@ class Search(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.geometry('1600x900')
+        self.geometry('1600x850')
         self.title('البحث عن عميل')
         self['bg']='#E5E8C7'
 
@@ -415,16 +411,16 @@ class Insert(tk.Toplevel):
                         ws.append([insertName.get(), insertCode.get(), 1])
                         ws.append([])
                         ws.append(['التاريخ', 'الخدمه','التكلفه','المدفوع','الرصيد', 'الملاحظات', 'مسلسل'])
-                        ws.append([date.get_date.strftime("%d/%m/%Y"),
+                        ws.append([date.get_date().strftime("%d/%m/%Y"),
                         insertService.get(),
                         insertCost.get(),
                         insertAmount.get(), 
                         (insertCost.get()) - insertAmount.get() ,
                         insertComment.get(), 1,
-                        date.get_date.year,date.get_date.month, date.get_date.day])
+                        date.get_date().year,date.get_date().month, date.get_date().day])
                         wb.save(file)
-                        messagebox.showinfo('Done','تم التسجيل بنجاح ')
                         self.destroy()
+                        messagebox.showinfo('Done','تم التسجيل بنجاح ')
 
         
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
@@ -544,19 +540,20 @@ class Add(tk.Toplevel):
                                         if ws.cell(column=7,row=i).value == ws.cell(column=3,row=1).value:
                                                 finalAmount = ws.cell(column=5,row=i).value
                                 ws['C1'] = int(ws.cell(column=3, row=1).value) + 1
-                                ws.append([date.get_date.strftime("%d/%m/%Y"),
+                                ws.append([date.get_date().strftime("%d/%m/%Y"),
                                 addService.get(),addCost.get(),
                                 addAmount.get(),
                                 ((int(finalAmount) + addCost.get()) - addAmount.get()),
                                 addComment.get(),
                                 ws.cell(column=3, row=1).value,
-                                date.get_date.year,date.get_date.month, date.get_date.day])
+                                date.get_date().year,date.get_date().month, date.get_date().day])
                                 wb.save(file)
                                 flag = True
-                                messagebox.showinfo('Done','تم التسجيل بنجاح ')
                                 self.destroy()
+                                messagebox.showinfo('Done','تم التسجيل بنجاح ')
                                 break
                 if not flag:
+                        self.destroy()
                         messagebox.showerror('Not Exists!','الاسم غير موجود')         
         
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
