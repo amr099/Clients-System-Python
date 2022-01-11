@@ -17,13 +17,12 @@ except:
 
 wb = load_workbook(file)
 
-services = ['اتعاب لجنه داخلية','اضافة سياره'
-        ,'اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
+services = ['اتعاب لجنه داخلية','اضافة سياره','اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
         ,'اقرار ضرائب قيمه مضافه', 'اقرار ضرائب مرتبات', 'بطاقه ضريبيه'
         ,'تجديد اشتراك البوابه الالكترونيه', 'تحت الحساب','تسوية ملف ضريبى', 'تعديل النشاط',
-        'جواب مرور', 'حفظ الملف بالضرائب'
-        ,'رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه','رسوم تجديد مستوردين', 'سجل تجارى',
-        'سداد ضرائب عامه', 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
+        'جواب مرور', 'حفظ الملف بالضرائب','رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه'
+        ,'رسوم تجديد مستوردين', 'سجل تجارى','سداد ضرائب عامه'
+        , 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
         ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
         'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
         'ميزانيه عموميه', 'نماذج 41 ض',]
@@ -209,14 +208,30 @@ class Search(tk.Toplevel):
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
 
         if len(entries) < 1:
-                entries.append('لا يوجد عملاء')  
+                entries.append('لا يوجد عملاء') 
+
+        
+        def check_input(event):
+                value = event.widget.get()
+                if value == '':
+                        menu['values'] = entries
+                else:
+                        data = []
+                        for item in entries:
+                                if value.lower() in item.lower():
+                                        data.append(item)
+
+                        menu['values'] = data
+
 
         searchName = StringVar()
         menu = ttk.Combobox(self, textvariable= searchName, font=('Calibri', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.5, rely=.25,anchor= CENTER, width=600)
-        menu['state'] = 'readonly'
+        menu.place(relx=.5, rely=.4,anchor= CENTER, width=600)
+        menu['values'] = entries
+        menu.bind('<KeyRelease>', check_input)
+
 
         def search():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
@@ -281,16 +296,75 @@ class Search(tk.Toplevel):
                         treev.tag_configure('odd', background='#e1dddd', font=('Calibri', 14)) 
                         treev.tag_configure('even', background= '#f5f3f3', font=('Calibri', 14)) 
 
-                # Label(self, text= debt,
-                # bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge",
-                # padx=20, pady=10 ).place(relx=.1, rely=.9,anchor= CENTER, width=200)
                 self.title( searchName.get())
+
+        def clients():
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev.pack()
+                
+                style = ttk.Style()
+                
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                highlightthickness=0, bd=0, font=('Calibri', 14)) 
+                style.configure("mystyle.Treeview.Heading", font=('Calibri', 20,'bold')) 
+                style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
+
+                verscrlbar = ttk.Scrollbar(self,
+                                orient ="vertical",
+                                command = treev.yview)
+
+                verscrlbar.pack(side ='left', fill ='x')   
+                treev.configure(xscrollcommand = verscrlbar.set)
+
+                treev["columns"] = ("1", "2", "3", "4", "5", "6")
+
+                treev['show'] = 'headings'
+        
+                treev.column("1", width = 400,anchor ='e')
+                treev.column("2", width = 150,anchor ='e')
+                treev.column("3", width = 150,anchor ='e')
+                treev.column("4", width = 120,anchor ='e')
+                treev.column("5", width = 700,anchor ='e')
+                treev.column("6", width = 70,anchor ='e')
+                
+                treev.heading("1", text ="العنوان")
+                treev.heading("2", text ="التليفون")
+                treev.heading("3", text ="رقم التسجيل")
+                treev.heading("4", text ="الرصيد")
+                treev.heading("5", text ="الاسم")
+                treev.heading("6", text ="الكود")
+
+
+                for sheet in wb.worksheets:
+                        ws = sheet
+                        if (ws.cell(row=1,column=2).value) != None:
+                                amount = 0
+                                for i in range (4, ws.max_row+1):
+                                        amount = int(ws.cell(row=i,column=5).value)
+                                treev.insert("", 'end', text ="L7",
+                                                values =(
+                                                '-' if (ws.cell(row=1,column=6).value) == None else str(ws.cell(row=1,column=6).value),
+                                                '-' if (ws.cell(row=1,column=5).value) == None else str(ws.cell(row=1,column=5).value),
+                                                '-' if (ws.cell(row=1,column=4).value) == None else str(ws.cell(row=1,column=4).value),
+                                                '-' if int(amount) == None else int(amount),
+                                                '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
+                                                '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
+                                                ), tags = ('table',))
+                
+                treev.tag_configure('table', background='#eee', font=('Calibri', 18)) 
+
+
 
         
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='ابحث',
                 command= search).place(relx=.5, rely=.5,anchor= CENTER)
+
+        Button(self, height = 2, width = 20, bg = '#D85426', fg = 'white',
+        activebackground='#D85426', font = 'fantasy 24 bold', bd = '8px solid #DBA531', 
+                text='سجل العملاء',
+                command= clients).place(relx=.5, rely=.2,anchor= CENTER)        
         
         Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
         activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
@@ -309,68 +383,94 @@ class Insert(tk.Toplevel):
 
         Label(self, text='الاسم',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge", 
-        padx=20, pady=10 ).place(relx=.8, rely=.1,anchor= CENTER, width=200)
+        padx=20, pady=10 ).place(relx=.9, rely=.1,anchor= CENTER, width=200)
 
         insertName = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=insertName, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.1,anchor= CENTER, width=600)
-
+        entry1.place(relx=.825, rely=.17,anchor= CENTER, width=450)
 
         Label(self, text='كود',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.2,anchor= CENTER, width=200)
+        borderwidth=5, relief="ridge",padx=20, pady=10 ).place(relx=.5, rely=.1,anchor= CENTER, width=200)
 
         insertCode = IntVar()
         entry1 = ttk.Entry(self, textvariable=insertCode, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.66, rely=.2,anchor= CENTER, width=100)
+        entry1.place(relx=.5, rely=.17,anchor= CENTER, width=200)
+
+        Label(self, text='رقم التسجيل',
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge", 
+        padx=20, pady=10 ).place(relx=.1, rely=.1,anchor= CENTER, width=200)
+
+        recordNumber = tk.IntVar()
+        entry1 = ttk.Entry(self, textvariable=recordNumber, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.1, rely=.17,anchor= CENTER, width=200)
+
+
+        Label(self, text='تليفون',
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge", 
+        padx=20, pady=10 ).place(relx=.9, rely=.7,anchor= CENTER, width=200)
+
+        phone = tk.StringVar()
+        entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.78, rely=.77,anchor= CENTER, width=600)
+
+
+        Label(self, text='العنوان',
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge", 
+        padx=20, pady=10 ).place(relx=.375, rely=.7,anchor= CENTER, width=200)
+
+
+        address = tk.StringVar()
+        entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.25, rely=.77,anchor= CENTER, width=600)
 
 
         Label(self, text='الخدمه',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.3,anchor= CENTER, width=200)
+        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.9, rely=.3,anchor= CENTER, width=200)
 
         insertService = tk.StringVar()
-        menu2 = ttk.Combobox(self, textvariable = insertService, font=('Calibri', 20,'bold'), values = services)
+        menu2 = ttk.Combobox(self, textvariable = insertService, font=('Calibri', 20,'bold'), values = services) 
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu2.place(relx=.5, rely=.3,anchor= CENTER, width=600)
+        menu2.place(relx=.835, rely=.37,anchor= CENTER, width=400)
         
 
         Label(self, text='التكلفه',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge",
-        padx=20, pady=10).place(relx=.8, rely=.6,anchor= CENTER, width=200)
+        padx=20, pady=10).place(relx=.5, rely=.3,anchor= CENTER, width=200)
 
         insertCost = IntVar()
         entry1 = ttk.Entry(self, textvariable=insertCost, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.6,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.5, rely=.37,anchor= CENTER, width=200)
 
 
         Label(self, text='المدفوع',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge",
-        padx=20, pady=10).place(relx=.8, rely=.5,anchor= CENTER, width=200)
+        padx=20, pady=10).place(relx=.1, rely=.3,anchor= CENTER, width=200)
 
         insertAmount = IntVar()
         entry1 = ttk.Entry(self, textvariable=insertAmount, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.5,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.1, rely=.37,anchor= CENTER, width=200)
         
         
         Label(self, text='ملاحظات',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge",
-        padx=20, pady=10).place(relx=.8, rely=.7,anchor= CENTER, width=200)
+        padx=20, pady=10).place(relx=.9, rely=.5,anchor= CENTER, width=200)
 
         insertComment = StringVar()
         entry1 = ttk.Entry(self, textvariable=insertComment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.7,anchor= CENTER, width=600, height=50)
-
+        entry1.place(relx=.78, rely=.57,anchor= CENTER, width=600,)
 
         Label(self, text='التاريخ',
         bg = '#43516C', fg = 'white', font = 'fantasy 20 bold', borderwidth=5, relief="ridge",
-        padx=20, pady=10).place(relx=.8, rely=.4,anchor= CENTER, width=200)
+        padx=20, pady=10).place(relx=.375, rely=.5,anchor= CENTER, width=200)
 
         date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        date.place(relx=.625, rely=.4,anchor= CENTER, width=200, height=50)
+        date.place(relx=.25, rely=.57,anchor= CENTER, width=600)
+        
         
         
         entries = []
@@ -404,11 +504,15 @@ class Insert(tk.Toplevel):
                         self.destroy()
                         messagebox.showerror('Already Exists!','الاسم او الكود موجودين بالفعل ') 
                         return
+                if len(insertName.get()) > 20:
+                        self.destroy()
+                        messagebox.showerror('Error!','من فضلك استخدم اسم لا تزيد حروفه عن 20 حرف') 
+                        return
                 
                 else:        
                         ws = wb.create_sheet(f'{insertName.get()} ({insertCode.get()})')
                         ws.title = f'{insertName.get()} ( {insertCode.get()} )'
-                        ws.append([insertName.get(), insertCode.get(), 1])
+                        ws.append([insertName.get(), insertCode.get(), 1,str(recordNumber.get()),phone.get(),address.get()])
                         ws.append([])
                         ws.append(['التاريخ', 'الخدمه','التكلفه','المدفوع','الرصيد', 'الملاحظات', 'مسلسل'])
                         ws.append([date.get_date().strftime("%d/%m/%Y"),
@@ -512,15 +616,15 @@ class Add(tk.Toplevel):
         
         def add():
 
-                if addCost.get() == '' or addName.get() == '' or addService.get() == '':
-                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ')
-                        self.destroy()
-                        return
                 try:
-                        addAmount.get() 
+                        addAmount.get(), addCost.get(), addService.get(), addName.get()
                 except:
                         self.destroy()
-                        messagebox.showerror('Invalid!','من فضلك قم بادخال خانة المدفوع بطريقه صحيحه ')
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ')
+                if addCost.get() == '' or addName.get() == '' or addService.get() == '':
+                        self.destroy()
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ')
+                        return
                 try:
                         addCost.get() 
                 except:
@@ -688,6 +792,8 @@ class Main(tk.Tk):
     def open_add(self):
                 window = Add(self)
                 window.grab_set()
+
+
 
 if __name__ == "__main__":
         app = Main()
