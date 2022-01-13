@@ -3,6 +3,7 @@ from tkinter import Entry, Label, Tk, ttk, messagebox
 import tkinter as tk
 from openpyxl import load_workbook
 from datetime import date, datetime
+from openpyxl.xml.constants import MAX_ROW
 from tkcalendar import DateEntry
 
 
@@ -89,6 +90,7 @@ class Expenses(tk.Toplevel):
                 text='اغلاق',
                 command=self.destroy).place(relx=.5, rely=.9,anchor= CENTER)
 
+# -----------------------------------------------------------------------------------------------------------------------------
 
 
 class Expenses_form(tk.Toplevel):
@@ -223,6 +225,7 @@ class Expenses_form(tk.Toplevel):
                 text='اغلاق',
                 command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
         
+# -----------------------------------------------------------------------------------------------------------------------------
         
 
 class Revenue(tk.Toplevel):
@@ -403,6 +406,7 @@ class Revenue(tk.Toplevel):
                 command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
         
 
+# -----------------------------------------------------------------------------------------------------------------------------
 
 class Payment(tk.Toplevel):
       def __init__(self, parent):
@@ -588,11 +592,11 @@ class Search(tk.Toplevel):
                 treev['show'] = 'headings'
         
                 treev.column("6", width = 200,anchor ='e')
-                treev.column("5", width = 350,anchor ='e')
+                treev.column("5", width = 420,anchor ='e')
                 treev.column("4", width = 160,anchor ='e')
                 treev.column("3", width = 160,anchor ='e')
                 treev.column("2", width = 160,anchor ='e')
-                treev.column("1", width = 550,anchor ='e')
+                treev.column("1", width = 500,anchor ='e')
                 
                 treev.heading("6", text ="التاريخ")
                 treev.heading("5", text ="الخدمه")
@@ -605,28 +609,29 @@ class Search(tk.Toplevel):
                 for sheet in wb.worksheets:
                         ws = sheet
                         if f'{str(ws.cell(row=1,column=1).value)} ({str(ws.cell(row=1,column=2).value)})' == searchName.get():
+                                ws = sheet
                                 for i in range (4, ws.max_row+1):
-                                        if i%2 == 0:
-                                                treev.insert("", 'end', text ="L7",
-                                                                values =(
-                                                                '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
-                                                                '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
-                                                                '-' if (ws.cell(row=i,column=4).value) == None else str(ws.cell(row=i,column=4).value),
-                                                                '-' if (ws.cell(row=i,column=3).value) == None else str(ws.cell(row=i,column=3).value),
-                                                                '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
-                                                                '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('even',))
-                                        else:
-                                                treev.insert("", 'end', text ="L7",
-                                                                values =(
-                                                                '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
-                                                                '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
-                                                                '-' if (ws.cell(row=i,column=4).value) == None else str(ws.cell(row=i,column=4).value),
-                                                                '-' if (ws.cell(row=i,column=3).value) == None else str(ws.cell(row=i,column=3).value),
-                                                                '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
-                                                                '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('odd',))                        
-                                        debt = str(ws.cell(row=i,column=5).value)
-                                        flag = True
-                        
+                                        if (ws.cell(row=i,column=1).value) != None:
+                                                if i%2 == 0:
+                                                        treev.insert("", 'end', text ="L7",
+                                                                        values =(
+                                                                        '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
+                                                                        '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
+                                                                        '-' if (ws.cell(row=i,column=4).value) == None else str(ws.cell(row=i,column=4).value),
+                                                                        '-' if (ws.cell(row=i,column=3).value) == None else str(ws.cell(row=i,column=3).value),
+                                                                        '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
+                                                                        '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('even',))
+                                                else:
+                                                        treev.insert("", 'end', text ="L7",
+                                                                        values =(
+                                                                        '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
+                                                                        '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
+                                                                        '-' if (ws.cell(row=i,column=4).value) == None else str(ws.cell(row=i,column=4).value),
+                                                                        '-' if (ws.cell(row=i,column=3).value) == None else str(ws.cell(row=i,column=3).value),
+                                                                        '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
+                                                                        '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('odd',))                        
+                                                flag = True
+                                        
                         treev.tag_configure('odd', background='#e1dddd', font=('Helvetica', 26)) 
                         treev.tag_configure('even', background= '#f5f3f3', font=('Helvetica', 26))
                 self.title( searchName.get())
@@ -976,10 +981,10 @@ class Add(tk.Toplevel):
         Label(self, text='التاريخ',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.46,anchor= CENTER, width=200)
 
-        date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        c_date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        date.place(relx=.675, rely=.46,anchor= CENTER, width=200, height=50)
+        c_date.place(relx=.675, rely=.46,anchor= CENTER, width=200, height=50)
         
         
         def add():
@@ -1013,22 +1018,54 @@ class Add(tk.Toplevel):
                 for sheet in wb.worksheets:
                         ws = sheet
                         if f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})' == addName.get():
-                                for i in range (1, ws.max_row+1):
-                                        if ws.cell(column=7,row=i).value == ws.cell(column=3,row=1).value:
-                                                finalAmount = ws.cell(column=5,row=i).value
-                                ws['C1'] = int(ws.cell(column=3, row=1).value) + 1
-                                ws.append([date.get_date().strftime("%d/%m/%Y"),
-                                addService.get(),addCost.get(),
-                                addAmount.get(),
-                                ((int(finalAmount) + addCost.get()) - addAmount.get()),
-                                addComment.get(),
-                                ws.cell(column=3, row=1).value,
-                                date.get_date().year,date.get_date().month, date.get_date().day])
-                                wb.save(file)
-                                flag = True
-                                self.destroy()
-                                messagebox.showinfo('Done','تم التسجيل بنجاح ')
-                                break
+                                inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
+                                for i in range (4, ws.max_row+1):
+                                        try:
+                                                row_date = date(ws.cell(column=8, row=i).value,ws.cell(column=9, row=i).value,ws.cell(column=10, row=i).value,)
+                                        except:
+                                                continue
+                                        if inserted_date < row_date:
+                                                rows_list = []
+                                                for i in range (4, ws.max_row+1):
+                                                        try:
+                                                                cur_row_date = date(ws.cell(column=8, row=i).value,ws.cell(column=9, row=i).value,ws.cell(column=10, row=i).value,)
+                                                        except:
+                                                                continue        
+                                                        cur_row = [ws.cell(column=1, row=i).value,ws.cell(column=2, row=i).value,ws.cell(column=3, row=i).value,
+                                                        ws.cell(column=4, row=i).value,ws.cell(column=5, row=i).value,ws.cell(column=6, row=i).value,
+                                                        ws.cell(column=7, row=i).value,ws.cell(column=8, row=i).value,ws.cell(column=9, row=i).value,
+                                                        ws.cell(column=10, row=i).value,cur_row_date]
+                                                        rows_list.append(cur_row)
+                                                        
+                                                rows_list.append([c_date.get_date().strftime("%d/%m/%Y"),
+                                                addService.get(),addCost.get(),
+                                                addAmount.get(),
+                                                ((int(finalAmount) + addCost.get()) - addAmount.get()),
+                                                addComment.get(),
+                                                ws.cell(column=3, row=1).value,c_date.get_date().year,c_date.get_date().month, c_date.get_date().day, date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day),])  
+                                                rows_list.sort(key=lambda x : x[10])
+                                                ws.delete_rows(4, ws.max_row)
+                                                for row in rows_list:
+                                                        ws.append(row)
+                                                wb.save(file)
+                                                flag = True
+                                                self.destroy()
+                                                messagebox.showinfo('Done','تم التسجيل بنجاح ')
+                                                break                                                
+                                if not flag:
+                                        finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
+                                        ws['C1'] = int(ws.cell(column=3, row=1).value) + 1
+                                        ws.append([c_date.get_date().strftime("%d/%m/%Y"),
+                                        addService.get(),addCost.get(),
+                                        addAmount.get(),
+                                        ((int(finalAmount) + addCost.get()) - addAmount.get()),
+                                        addComment.get(),
+                                        ws.cell(column=3, row=1).value, c_date.get_date().year,c_date.get_date().month, c_date.get_date().day,date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day),])
+                                        wb.save(file)
+                                        flag = True
+                                        self.destroy()
+                                        messagebox.showinfo('Done','تم التسجيل بنجاح ')
+                                        break
                 if not flag:
                         self.destroy()
                         messagebox.showerror('Not Exists!','الاسم غير موجود')         
