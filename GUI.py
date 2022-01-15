@@ -1,3 +1,6 @@
+# Change excel file name 
+# Change Password
+
 from tkinter import *
 from tkinter import Entry, Label, Tk, ttk, messagebox
 import tkinter as tk
@@ -9,10 +12,9 @@ root = tk.Tk()
 width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 
-
 root.destroy()
 
-file = 'xl.xlsx' # change ... 
+file = 'xl.xlsx' 
 try:
   load_workbook(file)
 except:
@@ -87,30 +89,30 @@ class Expenses(tk.Toplevel):
                 treev.heading("1", text ="المصروف")
                 treev.heading("2", text ="الحساب")
                 
-                for sheet in wb.worksheets:
-                        exps = []
-                        if sheet.title == 'مصروفات اداريه':
-                                ws = sheet
-                                exp = ''
-                                for i in range (1, ws.max_row+1):
-                                        try:
-                                                celldate = date(
-                                                ws.cell(row=i, column=4).value,
-                                                ws.cell(row=i, column=5).value,
-                                                ws.cell(row=i, column=6).value)
-                                        except:
-                                                continue
-                                        if celldate >= startdate.get_date() and celldate <= enddate.get_date():
-                                                if ws.cell(row=i,column=3).value not in exps :
-                                                        exps.append(ws.cell(row=i,column=3).value)
-                                                        exp = str(ws.cell(row=i,column=3).value)
-                                                        amount = 0 
-                                                        for i in range (1, ws.max_row+1):
-                                                                if str(ws.cell(row=i,column=3).value) == exp:
-                                                                        amount += int(ws.cell(row=i,column=2).value)
-                                                        treev.insert("", 'end', text ="L7",
-                                                                values =(amount,exp), tags = ("expense",))
-                                                        treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 26))
+                # for sheet in wb.worksheets:
+                exps = []
+                # if sheet.title == 'مصروفات اداريه':
+                ws = wb['مصروفات اداريه']
+                exp = ''
+                for i in range (1, ws.max_row+1):
+                        try:
+                                celldate = date(
+                                ws.cell(row=i, column=4).value,
+                                ws.cell(row=i, column=5).value,
+                                ws.cell(row=i, column=6).value)
+                        except:
+                                continue
+                        if celldate >= startdate.get_date() and celldate <= enddate.get_date():
+                                if ws.cell(row=i,column=3).value not in exps :
+                                        exps.append(ws.cell(row=i,column=3).value)
+                                        exp = str(ws.cell(row=i,column=3).value)
+                                        amount = 0 
+                                        for i in range (1, ws.max_row+1):
+                                                if str(ws.cell(row=i,column=3).value) == exp:
+                                                        amount += int(ws.cell(row=i,column=2).value)
+                                        treev.insert("", 'end', text ="L7",
+                                                values =(amount,exp), tags = ("expense",))
+                                        treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 26))
                 
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
@@ -132,7 +134,7 @@ class Expenses_form(tk.Toplevel):
         self.geometry(f'{width}x{height}')
         self.title('المصروفات')
         self['bg']='#E5E8C7'
-
+        
         entries = []
         for sheet in wb.worksheets:
                 if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه' :
@@ -264,7 +266,6 @@ class Expenses_form(tk.Toplevel):
                 command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
         
 # -----------------------------------------------------------------------------------------------------------------------------
-        
 
 class Revenue(tk.Toplevel):
       def __init__(self, parent):
@@ -316,11 +317,11 @@ class Revenue(tk.Toplevel):
 
                 treev['show'] = 'headings'
         
-                treev.column("1", width = 470,anchor ='e')
+                treev.column("1", width = 430,anchor ='e')
                 treev.column("2", width = 150,anchor ='e')
                 treev.column("3", width = 170,anchor ='e')
                 treev.column("4", width = 670,anchor ='e')
-                treev.column("5", width = 150,anchor ='e')
+                treev.column("5", width = 170,anchor ='e')
                 
                 treev.heading("1", text ="صافى الربح")
                 treev.heading("2", text ="المصروف")
@@ -515,10 +516,10 @@ class Payment(tk.Toplevel):
         Label(self, text='التاريخ',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.55,anchor= CENTER, width=200)
 
-        date = DateEntry(self,width=30,bg="darkblue",fg="white",year=datetime.now().year,
+        c_date = DateEntry(self,width=30,bg="darkblue",fg="white",year=datetime.now().year,
         month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy',font = ('fantasy', 25, 'bold'))
-        date.place(relx=.675, rely=.55,anchor= CENTER, width=200, height=50)
+        c_date.place(relx=.675, rely=.55,anchor= CENTER, width=200, height=50)
         
         
         
@@ -543,28 +544,86 @@ class Payment(tk.Toplevel):
                 for sheet in wb.worksheets:
                         ws = sheet
                         if f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})' == payName.get():
-                                for i in range (1, ws.max_row+1):
-                                        if ws.cell(column=7,row=i).value == ws.cell(column=3,row=1).value:
-                                                finalAmount = ws.cell(column=5,row=i).value
-                                ws['C1'] = int(ws.cell(column=3, row=1).value) + 1
-                                ws.append([date.get_date().strftime("%d/%m/%Y"),
-                                '-', '-',
-                                payAmount.get(),
-                                finalAmount - payAmount.get(),
-                                payComment.get(),
-                                ws.cell(column=3, row=1).value,
-                                date.get_date().year, date.get_date().month, date.get_date().day])
-                                wb.save(file)
-                                flag = True
-                                self.destroy()
-                                messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                                break
+                                inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
+                                # check if transaction needs to be sorted by comparing date
+                                for i in range (4, ws.max_row+1):
+                                        try:
+                                                row_date = date(
+                                                ws.cell(column=8, row=i).value,
+                                                ws.cell(column=9, row=i).value,
+                                                ws.cell(column=10, row=i).value,)
+                                        except:
+                                                continue
+                                # if transaction needs to be sorted
+                                        if inserted_date < row_date:
+                                                # add all transactions to rows_list
+                                                rows_list = []
+                                                for i in range (4, ws.max_row+1):
+                                                        try:
+                                                                cur_row_date = date(
+                                                                        ws.cell(column=8, row=i).value,
+                                                                        ws.cell(column=9, row=i).value,
+                                                                        ws.cell(column=10, row=i).value,)
+                                                        except:
+                                                                continue        
+                                                        cur_row = [    
+                                                        ws.cell(column=1, row=i).value,
+                                                        ws.cell(column=2, row=i).value,
+                                                        ws.cell(column=3, row=i).value,
+                                                        ws.cell(column=4, row=i).value,
+                                                        ws.cell(column=5, row=i).value,
+                                                        ws.cell(column=6, row=i).value,
+                                                        ws.cell(column=7, row=i).value,
+                                                        ws.cell(column=8, row=i).value,
+                                                        ws.cell(column=9, row=i).value,
+                                                        ws.cell(column=10, row=i).value,
+                                                        cur_row_date]
+
+                                                        rows_list.append(cur_row)
+                                                
+                                                rows_list.append([c_date.get_date().strftime("%d/%m/%Y"),
+                                                        '-',0,
+                                                        payAmount.get(),
+                                                        finalAmount - payAmount.get(),
+                                                        payComment.get(),
+                                                        ws.cell(column=3, row=1).value,
+                                                        c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date]) 
+                                                rows_list.sort(key=lambda x : x[10])
+                                                # delete rows 
+                                                ws.delete_rows(4, ws.max_row)
+                                                #add sorted rows
+                                                print(rows_list[0])
+                                                ws.append(rows_list[0])
+                                                rows_list.pop(0)
+                                                for row in rows_list:
+                                                        try:
+                                                                ws.append([row[0],row[1],row[2],row[3],int(row[2])-int(row[3])+int(ws.cell(column=5,row=ws.max_row).value),row[5],row[6],row[7],row[8],row[9],row[10],])
+                                                        except:
+                                                                continue
+                                                wb.save(file)
+                                                flag = True
+                                                self.destroy()
+                                                messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                                                break
+                                if not flag:
+                                        finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
+
+                                        ws.append([c_date.get_date().strftime("%d/%m/%Y"),
+                                                '-', 0,
+                                                payAmount.get(),
+                                                finalAmount - payAmount.get(),
+                                                payComment.get(),
+                                                ws.cell(column=3, row=1).value,
+                                                c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date])
+                                        wb.save(file)
+                                        flag = True
+                                        self.destroy()
+                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                                        break
                 if not flag:
                         messagebox.showerror('Not Exists!','الاسم غير موجود') 
                         self.destroy()
                 
-
-
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='حفظ',
@@ -1129,7 +1188,7 @@ class Add(tk.Toplevel):
                                                 addService.get(),
                                                 addCost.get(),
                                                 addAmount.get(),
-                                                ((int(finalAmount) + addCost.get()) - addAmount.get()),
+                                                (addCost.get() - addAmount.get()),
                                                 addComment.get(),
                                                 ws.cell(column=3, row=1).value,
                                                 c_date.get_date().year,c_date.get_date().month, c_date.get_date().day,
@@ -1140,9 +1199,14 @@ class Add(tk.Toplevel):
                                                 # delete rows 
                                                 ws.delete_rows(4, ws.max_row)
                                                 #add sorted rows
+                                                print(rows_list[0])
+                                                ws.append(rows_list[0])
+                                                rows_list.pop(0)
                                                 for row in rows_list:
-                                                        ws.append(row)
-
+                                                        try:
+                                                                ws.append([row[0],row[1],row[2],row[3],row[2]-row[3]+int(ws.cell(column=5,row=ws.max_row).value),row[5],row[6],row[7],row[8],row[9],row[10],])
+                                                        except:
+                                                                continue
                                                 wb.save(file)
                                                 flag = True
                                                 self.destroy()
