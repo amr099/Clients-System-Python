@@ -4,7 +4,6 @@
 from tkinter import *
 from tkinter import Entry, Label, Tk, ttk, messagebox
 import tkinter as tk
-from urllib import response
 from openpyxl import load_workbook
 from datetime import date, datetime
 from tkcalendar import DateEntry
