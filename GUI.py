@@ -7,13 +7,11 @@ import tkinter as tk
 from openpyxl import load_workbook
 from datetime import date, datetime
 from tkcalendar import DateEntry
+from babel.numbers import *
 
 root = tk.Tk()
 width = int(root.winfo_screenwidth() * 0.9)
 height = int(root.winfo_screenheight() * 0.9)
-
-print(height)
-print(width)
 
 root.destroy()
 
@@ -35,6 +33,47 @@ services = ['اتعاب لجنه داخلية','اضافة سياره','اعدا
         ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
         'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
         'ميزانيه عموميه', 'نماذج 41 ض',]
+
+# class Add_Service(tk.Toplevel):
+#       def __init__(self, parent):
+#         super().__init__(parent)
+
+#         self.geometry(f'{width}x{height}')
+#         self.title('اضافة خدمات جديده')
+#         self['bg']='#E5E8C7'
+
+        
+#         Label(self, text='خدمه جديده',
+#         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.63, rely=.35,anchor= CENTER, width=int(width*0.14))
+
+#         new_service = tk.StringVar()
+#         entry1 = ttk.Entry(self, textvariable=new_service, justify = LEFT, font = ('fantasy', 25, 'bold'))
+#         entry1.place(relx=.637, rely=.45,anchor= CENTER, width=int(width*0.4))
+
+
+#         def newService():
+#                 try:
+#                         new_service.get()
+#                         if new_service.get() not in services:
+#                                 services.append(new_service.get())
+#                         else:
+#                                 messagebox.showinfo('already exists!','هذه الخدمه موجوده بالفعل')
+#                 except:
+#                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
+#                         return
+
+
+#         Button(self, height = 1, width = 15, bg = 'red', fg = 'white',
+#         activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+#                 text='اضافه',
+#                 command=newService).place(relx=.5, rely=.5,anchor= CENTER)
+        
+#         Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
+#         activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+#                 text='اغلاق',
+#                 command=self.destroy).place(relx=.5, rely=.8,anchor= CENTER)
+
+        
 
 
 class Expenses_View(tk.Toplevel):
@@ -65,7 +104,6 @@ class Expenses_View(tk.Toplevel):
         enddate.place(relx=.3, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
         
-
         def viewExpenses():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
@@ -85,7 +123,9 @@ class Expenses_View(tk.Toplevel):
                 treev.column("2", width = int(width*0.83),anchor ='e')
                 treev.heading("1", text ="المصروف")
                 treev.heading("2", text ="الحساب")
-                
+
+                services.append()
+
                 expenses = []
                 try:
                         # if Expenses worksheet exists :
@@ -112,7 +152,7 @@ class Expenses_View(tk.Toplevel):
                                                         values =(amount,expense), tags = ("expense",))
                                                 treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 22))
                 except:
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showinfo('Not Found!','لا يوجد مصروفات اداريه حتى الان')  
                         
 
@@ -266,11 +306,11 @@ class Expenses_Form(tk.Toplevel):
                         amount.get()
                 except:
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-                        self.destroy()
+                        # self.destroy()
                         return      
                 if amount.get() == '':
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه   ')
-                        self.destroy()
+                        # self.destroy()
                         return   
 
                 if name.get() == '':
@@ -336,7 +376,7 @@ class Expenses_Form(tk.Toplevel):
                                                 ws.append(row)
 
                                         wb0.save(file0)
-                                        self.destroy()
+                                        # self.destroy()
                                         messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                         break
 
@@ -349,14 +389,14 @@ class Expenses_Form(tk.Toplevel):
                                                 ,c_date.get_date().month
                                                 ,c_date.get_date().day, inserted_date]) 
                                         wb0.save(file0)
-                                        self.destroy()
+                                        # self.destroy()
                                         messagebox.showinfo('Done','تم الحفظ بنجاح ')  
                 else:        
                         try:
                                 ws = wb0[name.get()]
                         except:
                                 messagebox.showerror('Not Exists!','الاسم غير موجود') 
-                                self.destroy()        
+                                # self.destroy()        
                         inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
                         # first entry
                         if ws.cell(row=4, column=1).value == None or ws.cell(row=4, column=1).value == '' :
@@ -368,7 +408,7 @@ class Expenses_Form(tk.Toplevel):
                                 ws['F4'] = c_date.get_date().day
                                 ws['G4'] = inserted_date
                                 wb0.save(file0)
-                                self.destroy()
+                                # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                         #no first entry        
                         else:        
@@ -422,7 +462,7 @@ class Expenses_Form(tk.Toplevel):
                                                         ws.append(row)
 
                                                 wb0.save(file0)
-                                                self.destroy()
+                                                # self.destroy()
                                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                                 break
 
@@ -435,7 +475,7 @@ class Expenses_Form(tk.Toplevel):
                                                         ,c_date.get_date().month
                                                         ,c_date.get_date().day, inserted_date]) 
                                                 wb0.save(file0)
-                                                self.destroy()
+                                                # self.destroy()
                                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                         
 
@@ -708,15 +748,15 @@ class Payment_Form(tk.Toplevel):
                         amount.get() and name.get()
                 except:
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-                        self.destroy()
+                        # self.destroy()
                         return      
                 if amount.get() == '' or amount.get() == None :
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة المدفوع بطريقه صحيحه ')
-                        self.destroy()
+                        # self.destroy()
                         return
                 if name.get() == '':
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة الاسم بطريقه صحيحه ')
-                        self.destroy()
+                        # self.destroy()
                         return        
 
                 # for sheet in wb.worksheets:
@@ -724,7 +764,7 @@ class Payment_Form(tk.Toplevel):
                         ws = wb[name.get()]
                 except:
                         messagebox.showerror('Not Exists!','الاسم غير موجود') 
-                        self.destroy()
+                        # self.destroy()
 
                 finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
                 inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
@@ -784,7 +824,7 @@ class Payment_Form(tk.Toplevel):
                                         except:
                                                 continue
                                 wb.save(file)
-                                self.destroy()
+                                # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                 break
 
@@ -798,7 +838,7 @@ class Payment_Form(tk.Toplevel):
                                         comment.get(),
                                         c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date])
                                 wb.save(file)
-                                self.destroy()
+                                # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                 
         Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
@@ -887,15 +927,24 @@ class Search(tk.Toplevel):
                 treev.heading("2", text ="الرصيد")
                 treev.heading("1", text ="الملاحظات")
 
+                
+                def OnDoubleClick(event):
+                        item = treev.selection()[0]
+                        ws.delete_rows(treev.item(item,"text"),1)
+                        treev.delete(item)
+                        wb.save(file)
+
+                treev.bind("<d>", OnDoubleClick)
+
                 try:
                         ws = wb[name.get()]
                 except:
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Not Exists!','الاسم غير موجود')                 
                 for i in range (4, ws.max_row+1):
                         if (ws.cell(row=i,column=1).value) != None:
                                 if i%2 == 0:
-                                        treev.insert("", 'end', text ="L7",
+                                        treev.insert("", 'end', text =i,
                                                         values =(
                                                         '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
                                                         '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
@@ -904,7 +953,7 @@ class Search(tk.Toplevel):
                                                         '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
                                                         '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('even',))
                                 else:
-                                        treev.insert("", 'end', text ="L7",
+                                        treev.insert("", 'end', text =i,
                                                         values =(
                                                         '-' if (ws.cell(row=i,column=6).value) == None else str(ws.cell(row=i,column=6).value), 
                                                         '-' if (ws.cell(row=i,column=5).value) == None else str(ws.cell(row=i,column=5).value),
@@ -917,6 +966,7 @@ class Search(tk.Toplevel):
                 treev.tag_configure('even', background= '#f5f3f3', font=('Helvetica', 22))
         self.title( name.get())
                 
+
 
 
         def clients():
@@ -947,6 +997,7 @@ class Search(tk.Toplevel):
                 treev.heading("5", text ="الاسم")
                 treev.heading("6", text ="الكود")
 
+
                 counter = 0
                 for sheet in wb.worksheets:
                         counter +=1
@@ -959,7 +1010,7 @@ class Search(tk.Toplevel):
                                         except:
                                                 continue   
                                 if counter % 2 == 0:             
-                                        treev.insert("", 'end', text ="L7",
+                                        treev.insert("", 'end', text ='',
                                                         values =(
                                                         '-' if (ws.cell(row=1,column=5).value) == None else str(ws.cell(row=1,column=5).value),
                                                         '-' if (ws.cell(row=1,column=4).value) == None else str(ws.cell(row=1,column=4).value),
@@ -969,7 +1020,7 @@ class Search(tk.Toplevel):
                                                         '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
                                                         ), tags = ('even',))
                                 else:             
-                                        treev.insert("", 'end', text ="L7",
+                                        treev.insert("", 'end', text ='',
                                                         values =(
                                                         '-' if (ws.cell(row=1,column=5).value) == None else str(ws.cell(row=1,column=5).value),
                                                         '-' if (ws.cell(row=1,column=4).value) == None else str(ws.cell(row=1,column=4).value),
@@ -1054,11 +1105,27 @@ class Client_Form(tk.Toplevel):
         Label(self, text='الخدمه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.3,anchor= CENTER, width=int(width*0.138))
 
+
+        
+        def check_input_services(event):
+                value = event.widget.get()
+                if value == '':
+                        menu2['values'] = services
+                else:
+                        data = []
+                        for item in services:
+                                if value.lower() in item.lower():
+                                        data.append(item)
+
+                        menu2['values'] = data
+
         service = tk.StringVar()
         menu2 = ttk.Combobox(self, textvariable = service, font=('Helvetica', 20,'bold'), values = services) 
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu2.place(relx=.835, rely=.37,anchor= CENTER, width=int(width*0.2777))
+        menu2.bind('<KeyRelease>', check_input_services)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.912, rely=.42,anchor= CENTER)
         
@@ -1115,42 +1182,47 @@ class Client_Form(tk.Toplevel):
                 try:
                         name.get() and code.get() and record.get() and service.get() and cost.get() and amount.get() and phone.get() and address.get() and comment.get()
                 except:
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
                         return
 
                 # not None Validation
                 if name.get() == None or code.get() == None or service.get() == None or cost.get() == None or amount.get() == None :
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ') 
                         return        
 
                 # not "" validation        
                 if name.get() == "" or service.get() == "" :
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك نأكد من ادخال الاسم و الخدمه ') 
                         return
 
                 # String validation  
                 if not name.get().isalpha() and service.get().isalpha():
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك نأكد من ادخال الاسم و الخدمه بطريقه صحيحه ') 
                         return   
                 
                 # phone validation
                 if not phone.get().isnumeric:
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك نأكد من ادخال التليفون بطريقه صحيحه ') 
                         return  
 
                 # Case validations
-                if name.get() in entries or code.get() in codeentries:
-                        self.destroy()
-                        messagebox.showerror('Already Exists!','الاسم او الكود موجودين بالفعل ') 
+                if name.get() in entries :
+                        # self.destroy()
+                        messagebox.showerror('Already Exists!','الاسم موجود بالفعل ') 
                         return
-                if len(name.get()) > 20:
-                        self.destroy()
-                        messagebox.showerror('Error!','من فضلك استخدم اسم لا تزيد حروفه عن 20 حرف') 
+                if code.get() in codeentries:
+                        # self.destroy()
+                        messagebox.showerror('Already Exists!','الكود موجود بالفعل ') 
+                        return
+                
+                if len(name.get()) > 26:
+                        # self.destroy()
+                        messagebox.showerror('Error!','من فضلك استخدم اسم لا تزيد حروفه عن 23 حرف') 
                         return
                 
                 else:        
@@ -1176,7 +1248,7 @@ class Client_Form(tk.Toplevel):
                         wb0.save(file0)
                         # wb0.close()
 
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
@@ -1210,7 +1282,7 @@ class Service_Form(tk.Toplevel):
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold' ).place(relx=.8, rely=.1,anchor= CENTER, width=int(width*0.138))
 
 
-        def check_input(event):
+        def check_input_names(event):
                 value = event.widget.get()
                 if value == '':
                         menu['values'] = entries
@@ -1228,7 +1300,7 @@ class Service_Form(tk.Toplevel):
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu.place(relx=.55, rely=.1,anchor= CENTER, width=int(width*0.417))
         menu['values'] = entries
-        menu.bind('<KeyRelease>', check_input)
+        menu.bind('<KeyRelease>', check_input_names)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.15,anchor= CENTER)
 
@@ -1236,11 +1308,25 @@ class Service_Form(tk.Toplevel):
         Label(self, text='الخدمه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.22,anchor= CENTER, width=int(width*0.138))
 
+        
+        def check_input_services(event):
+                value = event.widget.get()
+                if value == '':
+                        menu2['values'] = services
+                else:
+                        data = []
+                        for item in services:
+                                if value.lower() in item.lower():
+                                        data.append(item)
+
+                        menu2['values'] = data
+                        
         service = tk.StringVar()
         menu2 = ttk.Combobox(self, textvariable = service, font=('Helvetica', 20,'bold'), values = services)
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu2.place(relx=.55, rely=.22,anchor= CENTER, width=int(width*0.417))
+        menu2.bind('<KeyRelease>', check_input_services)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.27,anchor= CENTER)
         
@@ -1377,7 +1463,7 @@ class Service_Form(tk.Toplevel):
                                         except:
                                                 continue
                                 wb.save(file)
-                                self.destroy()
+                                # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                 break 
 
@@ -1395,7 +1481,7 @@ class Service_Form(tk.Toplevel):
                                 inserted_date,])
 
                                 wb.save(file)
-                                self.destroy()
+                                # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
@@ -1462,12 +1548,12 @@ class Delete(tk.Toplevel):
                         except:
                                 self.destroy()
                                 messagebox.showerror('Not Exists!','الاسم غير موجود')         
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showinfo('Done!','تم الحذف بنجاح')
                         wb.save(file)
                         wb0.save(file0)
                 else :
-                        self.destroy()
+                        # self.destroy()
                         messagebox.showinfo('Fail!', 'لم يتم الحذف')       
 
 
@@ -1494,45 +1580,54 @@ class Main(tk.Tk):
         bg = '#D85426', fg = 'white', font = 'fantasy 30 bold', borderwidth=20, relief="ridge", padx=20, pady=20).place(relx=.5, rely=.1,anchor= CENTER)
                 
         Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='green', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='عملاء',
                 command=self.open_insert).place(relx=.8, rely=.35,anchor= CENTER)
 
         Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='green', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='خدمات',
                 command=self.open_add).place(relx=.8, rely=.5,anchor= CENTER) 
 
         Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='green', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='مدفوعات',
                 command=self.open_payment).place(relx=.8, rely=.65,anchor= CENTER)
 
         Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='green', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='مصروفات',
                 command=self.open_exp_form).place(relx=.8, rely=.8,anchor= CENTER) 
 
         Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='العملاء',
                 command=self.open_search).place(relx=.5, rely=.35,anchor= CENTER)
 
         Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='الإيرادات',
                 command=self.open_revenue).place(relx=.5, rely=.6,anchor= CENTER)       
 
         Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text= 'المصروفات',
                 command=self.open_exp).place(relx=.5, rely=.85,anchor= CENTER)        
 
         Button(self, height = 1, width = 10, bg = 'red', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='حذف',
-                command=self.open_delete).place(relx=.2, rely=.6,anchor= CENTER)
+                command=self.open_delete).place(relx=.2, rely=.35,anchor= CENTER)
 
+        
+#         Button(self, height = 1, width = 10, bg = 'yellow', fg = 'white',
+#         activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
+#                 text='اضافه خدمه',
+#                 command=self.open_add_service).place(relx=.2, rely=.6,anchor= CENTER)        
+
+#     def open_add_service(self):
+#         window = Add_Service(self)
+#         window.grab_set() 
 
     def open_exp(self):
                 window = Expenses_View(self)
