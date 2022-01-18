@@ -9,8 +9,11 @@ from datetime import date, datetime
 from tkcalendar import DateEntry
 
 root = tk.Tk()
-width = root.winfo_screenwidth()
-height = root.winfo_screenheight()
+width = int(root.winfo_screenwidth() * 0.9)
+height = int(root.winfo_screenheight() * 0.9)
+
+print(height)
+print(width)
 
 root.destroy()
 
@@ -43,31 +46,31 @@ class Expenses_View(tk.Toplevel):
         self['bg']='#E5E8C7'
 
         Label(self, text='من',
-        bg = '#43516C', fg = 'white', font = 'fantasy 30 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.7, rely=.4,anchor= CENTER, width=400)
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
+        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.7, rely=.4,anchor= CENTER, width=int(width*0.28))
 
-        startdate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        startdate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 15, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        startdate.place(relx=.7, rely=.5,anchor= CENTER, width=200, height=50)
+        startdate.place(relx=.7, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
 
         Label(self, text='الى',
-        bg = '#43516C', fg = 'white', font = 'fantasy 30 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.3, rely=.4,anchor= CENTER, width=400)
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
+        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.3, rely=.4,anchor= CENTER, width=int(width*0.28))
 
-        enddate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        enddate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 15, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        enddate.place(relx=.3, rely=.5,anchor= CENTER, width=200, height=50)
+        enddate.place(relx=.3, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
         
 
         def viewExpenses():
-                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -78,8 +81,8 @@ class Expenses_View(tk.Toplevel):
                 treev.configure(xscrollcommand = verscrlbar.set)
                 treev["columns"] = ("1", "2")
                 treev['show'] = 'headings'
-                treev.column("1", width = 400,anchor ='e')
-                treev.column("2", width = 1200,anchor ='e')
+                treev.column("1", width = int(width*0.28),anchor ='e')
+                treev.column("2", width = int(width*0.83),anchor ='e')
                 treev.heading("1", text ="المصروف")
                 treev.heading("2", text ="الحساب")
                 
@@ -107,19 +110,19 @@ class Expenses_View(tk.Toplevel):
                                                                 amount += int(ws0.cell(row=i,column=2).value)
                                                 treev.insert("", 'end', text ="L7",
                                                         values =(amount,expense), tags = ("expense",))
-                                                treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 26))
+                                                treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 22))
                 except:
                         self.destroy()
                         messagebox.showinfo('Not Found!','لا يوجد مصروفات اداريه حتى الان')  
                         
 
         def clientsExpenses():
-                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 
                 style = ttk.Style()
                 
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -135,9 +138,9 @@ class Expenses_View(tk.Toplevel):
 
                 treev['show'] = 'headings'
         
-                treev.column("1", width = 600,anchor ='e')
-                treev.column("2", width = 800,anchor ='e')
-                treev.column("3", width = 200,anchor ='e')
+                treev.column("1", width = int(width*0.42),anchor ='e')
+                treev.column("2", width = int(width*0.55),anchor ='e')
+                treev.column("3", width = int(width*0.14),anchor ='e')
                 
                 treev.heading("1", text ="اجمالى المصروفات")
                 treev.heading("2", text ="الاسم")
@@ -164,13 +167,13 @@ class Expenses_View(tk.Toplevel):
                                                 '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
                                                 '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
                                                 ), tags = ('table',))
-                        treev.tag_configure('table', background='#eee', font=('Helvetica', 26)) 
+                        treev.tag_configure('table', background='#eee', font=('Helvetica', 22)) 
 
                 
                 
                 
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='المصروفات الاداريه',
                 command=viewExpenses).place(relx=.5, rely=.55,anchor= CENTER) 
 
@@ -180,7 +183,7 @@ class Expenses_View(tk.Toplevel):
                 command= clientsExpenses).place(relx=.5, rely=.2,anchor= CENTER)                                                                     
 
         Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
                 command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)
 
@@ -202,7 +205,7 @@ class Expenses_Form(tk.Toplevel):
                 entries.append('لا يوجد عملاء')   
 
         Label(self, text='اسم العميل',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.75, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.75, rely=.1,anchor= CENTER, width=int(width*0.14))
 
         def check_input(event):
                 value = event.widget.get()
@@ -220,40 +223,40 @@ class Expenses_Form(tk.Toplevel):
         menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.5, rely=.1,anchor= CENTER, width=600)
+        menu.place(relx=.5, rely=.1,anchor= CENTER, width=int(width*0.4))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
         Label(self, text='.اترك خانة (اسم العميل) فارغه اذا كان المصروف غير متعلق بعميل معين',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.577, rely=.15,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.577, rely=.15,anchor= CENTER)
 
 
         Label(self, text='المبلغ',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.75, rely=.25,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.75, rely=.25,anchor= CENTER, width=int(width*0.14))
 
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.25,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.5, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.64, rely=.3,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.64, rely=.31,anchor= CENTER)
         
 
         Label(self, text='المصروف',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.75, rely=.4,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.75, rely=.4,anchor= CENTER, width=int(width*0.14))
 
         comment = StringVar()
         entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.4,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.4), height=50)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.64, rely=.45,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.64, rely=.46,anchor= CENTER)
 
 
         Label(self, text='التاريخ',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.75, rely=.55,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.75, rely=.55,anchor= CENTER, width=int(width*0.14))
 
         c_date = DateEntry(self,width=30,bg="darkblue",fg="white",year=datetime.now().year,
         month=datetime.now().month,day=datetime.now().day
-        ,locale='en_US', date_pattern='dd/MM/yyyy',font = ('fantasy', 25, 'bold'))
-        c_date.place(relx=.625, rely=.55,anchor= CENTER, width=200, height=50)
+        ,locale='en_US', date_pattern='dd/MM/yyyy',font = ('fantasy', 15, 'bold'))
+        c_date.place(relx=.625, rely=.55,anchor= CENTER, width=int(width*0.14), height=50)
         
         
 
@@ -439,15 +442,16 @@ class Expenses_Form(tk.Toplevel):
                         
                                                         
                                                         
-        Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
-                command=addExpenses).place(relx=.5, rely=.75,anchor= CENTER)
-
-        Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+                command=addExpenses).place(relx=.5, rely=.9,anchor= CENTER)
+        
+        
+        Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
-                command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
+                command=self.destroy).place(relx=.1, rely=.95,anchor= CENTER)        
         
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -461,31 +465,31 @@ class Revenues_View(tk.Toplevel):
 
 
         Label(self, text='من',
-        bg = '#43516C', fg = 'white', font = 'fantasy 30 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.7, rely=.4,anchor= CENTER, width=400)
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
+        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.7, rely=.4,anchor= CENTER, width=int(width*0.28))
 
-        startdate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        startdate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 15, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        startdate.place(relx=.7, rely=.5,anchor= CENTER, width=200, height=50)
+        startdate.place(relx=.7, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
 
         Label(self, text='الى',
-        bg = '#43516C', fg = 'white', font = 'fantasy 30 bold',
-        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.3, rely=.4,anchor= CENTER, width=400)
+        bg = '#43516C', fg = 'white', font = 'fantasy 20 bold',
+        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.3, rely=.4,anchor= CENTER, width=int(width*0.28))
 
-        enddate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        enddate = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 13, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        enddate.place(relx=.3, rely=.5,anchor= CENTER, width=200, height=50)
+        enddate.place(relx=.3, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
         def clientsRevenues():
-                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 
                 style = ttk.Style()
                 
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -501,11 +505,11 @@ class Revenues_View(tk.Toplevel):
 
                 treev['show'] = 'headings'
         
-                treev.column("1", width = 430,anchor ='e')
-                treev.column("2", width = 150,anchor ='e')
-                treev.column("3", width = 170,anchor ='e')
-                treev.column("4", width = 670,anchor ='e')
-                treev.column("5", width = 170,anchor ='e')
+                treev.column("1", width = int(width*0.15),anchor ='e')
+                treev.column("2", width = int(width*0.15),anchor ='e')
+                treev.column("3", width = int(width*0.15),anchor ='e')
+                treev.column("4", width = int(width*0.4),anchor ='e')
+                treev.column("5", width = int(width*0.15),anchor ='e')
                 
                 treev.heading("1", text ="صافى الربح")
                 treev.heading("2", text ="المصروف")
@@ -553,7 +557,7 @@ class Revenues_View(tk.Toplevel):
                                                 '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
                                                 '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
                                                 ), tags = ('table',))
-                treev.tag_configure('table', background='#eee', font=('Helvetica', 26)) 
+                treev.tag_configure('table', background='#eee', font=('Helvetica', 22)) 
 
         def totalRevenues():      
                 total_revenue = 0
@@ -594,28 +598,28 @@ class Revenues_View(tk.Toplevel):
                 income = total_revenue - total_expenses 
 
                 Label(self, text='الايرادات',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.65,anchor= CENTER, width=200)
+                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.65,anchor= CENTER, width=int(width*0.14))
                 Label(self, text='المصروفات',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.65,anchor= CENTER, width=200)
+                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.65,anchor= CENTER, width=int(width*0.14))
                 Label(self, text='صافى الربح',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.2, rely=.65,anchor= CENTER, width=200)
+                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.2, rely=.65,anchor= CENTER, width=int(width*0.14))
                 Label(self, text=str(total_revenue),
-                bg = '#E85662', fg = 'white', font = 'fantasy 40 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.75,anchor= CENTER, width=280)
+                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.75,anchor= CENTER, width=int(width*0.16))
                 Label(self, text='_',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 40 bold').place(relx=.65, rely=.72,anchor= CENTER, width=200)
+                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.65, rely=.72,anchor= CENTER, width=int(width*0.14))
                 Label(self, text=str(total_expenses),
-                bg = '#E85662', fg = 'white', font = 'fantasy 40 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.5, rely=.75,anchor= CENTER, width=280)
+                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.5, rely=.75,anchor= CENTER, width=int(width*0.16))
                 Label(self, text='=',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 40 bold').place(relx=.35, rely=.75,anchor= CENTER, width=200)
+                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.35, rely=.75,anchor= CENTER, width=int(width*0.14))
                 Label(self, text=str(income),
-                bg = '#E85662', fg = 'white', font = 'fantasy 40 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.2, rely=.75,anchor= CENTER, width=280)
+                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.2, rely=.75,anchor= CENTER, width=int(width*0.16))
                                 
 
         Button(self, height = 1, width = 18, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اجمالى الايرادات و المصروفات',
                 command=totalRevenues).place(relx=.5, rely=.55,anchor= CENTER)
 
@@ -625,7 +629,7 @@ class Revenues_View(tk.Toplevel):
                 command= clientsRevenues).place(relx=.5, rely=.2,anchor= CENTER)        
 
         Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+        activebackground='#43516C', font = 'fantasy 12 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
                 command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
         
@@ -648,7 +652,7 @@ class Payment_Form(tk.Toplevel):
                 entries.append('لا يوجد عملاء')   
 
         Label(self, text='الاسم',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.1,anchor= CENTER, width=int(width*0.14))
 
         def check_input(event):
                 value = event.widget.get()
@@ -666,37 +670,37 @@ class Payment_Form(tk.Toplevel):
         menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.55, rely=.1,anchor= CENTER, width=600)
+        menu.place(relx=.55, rely=.1,anchor= CENTER, width=int(width*0.4))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.15,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.15,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.25,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.25,anchor= CENTER, width=int(width*0.14))
 
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.25,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.55, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.3,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.31,anchor= CENTER)
         
 
         Label(self, text='ملاحظات',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.4,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.4,anchor= CENTER, width=int(width*0.14))
 
         comment = StringVar()
         entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.4,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.55, rely=.4,anchor= CENTER, width=int(width*0.4), height=50)
 
         Label(self, text='التاريخ',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.55,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.55,anchor= CENTER, width=int(width*0.14))
 
         c_date = DateEntry(self,width=30,bg="darkblue",fg="white",year=datetime.now().year,
         month=datetime.now().month,day=datetime.now().day
-        ,locale='en_US', date_pattern='dd/MM/yyyy',font = ('fantasy', 25, 'bold'))
-        c_date.place(relx=.675, rely=.55,anchor= CENTER, width=200, height=50)
+        ,locale='en_US', date_pattern='dd/MM/yyyy',font = ('fantasy', 15, 'bold'))
+        c_date.place(relx=.675, rely=.55,anchor= CENTER, width=int(width*0.14), height=50)
         
         
         def payment():
@@ -797,15 +801,16 @@ class Payment_Form(tk.Toplevel):
                                 self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                 
-        Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
-                command=payment).place(relx=.5, rely=.75,anchor= CENTER)
-
-        Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+                command=payment).place(relx=.5, rely=.9,anchor= CENTER)
+        
+        
+        Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
-                command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)        
+                command=self.destroy).place(relx=.1, rely=.95,anchor= CENTER)     
         
 # # --------------------------------------------------------------------------------------------------------------------------------------------                
 
@@ -813,7 +818,7 @@ class Search(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.geometry('1600x850')
+        self.geometry(f'{width}x{height}')
         self.title('البحث عن عميل')
         self['bg']='#E5E8C7'
 
@@ -840,25 +845,25 @@ class Search(tk.Toplevel):
 
         
         Label(self, text='اسم العميل',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.63, rely=.35,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.63, rely=.35,anchor= CENTER, width=int(width*0.14))
 
         name = StringVar()
         menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.5, rely=.4,anchor= CENTER, width=600)
+        menu.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.47))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.637, rely=.45,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.637, rely=.45,anchor= CENTER)
 
 
         flag = False
         def search():
-                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -869,12 +874,12 @@ class Search(tk.Toplevel):
                 treev.configure(xscrollcommand = verscrlbar.set)
                 treev["columns"] = ("1", "2", "3", "4", "5", "6")
                 treev['show'] = 'headings'
-                treev.column("6", width = 200,anchor ='e')
-                treev.column("5", width = 420,anchor ='e')
-                treev.column("4", width = 160,anchor ='e')
-                treev.column("3", width = 160,anchor ='e')
-                treev.column("2", width = 160,anchor ='e')
-                treev.column("1", width = 500,anchor ='e')
+                treev.column("6", width = int(width*0.15),anchor ='e')
+                treev.column("5", width = int(width*0.3),anchor ='e')
+                treev.column("4", width = int(width*0.1),anchor ='e')
+                treev.column("3", width = int(width*0.1),anchor ='e')
+                treev.column("2", width = int(width*0.1),anchor ='e')
+                treev.column("1", width = int(width*0.35),anchor ='e')
                 treev.heading("6", text ="التاريخ")
                 treev.heading("5", text ="الخدمه")
                 treev.heading("4", text ="التكلفه")
@@ -908,17 +913,17 @@ class Search(tk.Toplevel):
                                                         '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
                                                         '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('odd',))                        
                         
-                treev.tag_configure('odd', background='#e1dddd', font=('Helvetica', 26)) 
-                treev.tag_configure('even', background= '#f5f3f3', font=('Helvetica', 26))
+                treev.tag_configure('odd', background='#e1dddd', font=('Helvetica', 22)) 
+                treev.tag_configure('even', background= '#f5f3f3', font=('Helvetica', 22))
         self.title( name.get())
                 
 
 
         def clients():
-                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=900)
+                treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=40,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -929,12 +934,12 @@ class Search(tk.Toplevel):
                 treev.configure(xscrollcommand = verscrlbar.set)
                 treev["columns"] = ("1", "2", "3", "4", "5", "6")
                 treev['show'] = 'headings'
-                treev.column("1", width = 480,anchor ='e')
-                treev.column("2", width = 230,anchor ='e')
-                treev.column("3", width = 140,anchor ='e')
-                treev.column("4", width = 150,anchor ='e')
-                treev.column("5", width = 450,anchor ='e')
-                treev.column("6", width = 150,anchor ='e')
+                treev.column("1", width = int(width*0.2),anchor ='e')
+                treev.column("2", width = int(width*0.1),anchor ='e')
+                treev.column("3", width = int(width*0.1),anchor ='e')
+                treev.column("4", width = int(width*0.1),anchor ='e')
+                treev.column("5", width = int(width*0.4),anchor ='e')
+                treev.column("6", width = int(width*0.1),anchor ='e')
                 treev.heading("1", text ="العنوان")
                 treev.heading("2", text ="التليفون")
                 treev.heading("3", text ="رقم التسجيل")
@@ -974,8 +979,8 @@ class Search(tk.Toplevel):
                                                         '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
                                                         ), tags = ('odd',))
                                                                 
-                treev.tag_configure('even', background='#e1dddd', font=('Helvetica', 26)) 
-                treev.tag_configure('odd', background='#f5f3f3', font=('Helvetica', 26)) 
+                treev.tag_configure('even', background='#e1dddd', font=('Helvetica', 22)) 
+                treev.tag_configure('odd', background='#f5f3f3', font=('Helvetica', 22)) 
 
 
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
@@ -1004,94 +1009,94 @@ class Client_Form(tk.Toplevel):
         self['bg']='#E5E8C7'
 
         Label(self, text='الاسم',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.9, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         name = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=name, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.825, rely=.17,anchor= CENTER, width=450)
+        entry1.place(relx=.825, rely=.17,anchor= CENTER, width=int(width*0.3))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.92, rely=.22,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.92, rely=.22,anchor= CENTER)
 
         Label(self, text='الكود',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.5, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         code = IntVar()
         entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.17,anchor= CENTER, width=200)
+        entry1.place(relx=.5, rely=.17,anchor= CENTER, width=int(width*0.138))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.51, rely=.22,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.51, rely=.22,anchor= CENTER)
 
         Label(self, text='رقم التسجيل',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.1, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.1, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         record = tk.IntVar()
         entry1 = ttk.Entry(self, textvariable=record, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.1, rely=.17,anchor= CENTER, width=200)
+        entry1.place(relx=.1, rely=.17,anchor= CENTER, width=int(width*0.138))
 
 
         Label(self, text='رقم التليفون',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.9, rely=.7,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.7,anchor= CENTER, width=int(width*0.138))
 
         phone = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.78, rely=.77,anchor= CENTER, width=600)
+        entry1.place(relx=.78, rely=.77,anchor= CENTER, width=int(width*0.4))
 
 
         Label(self, text='العنوان',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.375, rely=.7,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.375, rely=.7,anchor= CENTER, width=int(width*0.138))
 
 
         address = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.25, rely=.77,anchor= CENTER, width=600)
+        entry1.place(relx=.25, rely=.77,anchor= CENTER, width=int(width*0.4))
 
 
         Label(self, text='الخدمه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.9, rely=.3,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         service = tk.StringVar()
         menu2 = ttk.Combobox(self, textvariable = service, font=('Helvetica', 20,'bold'), values = services) 
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu2.place(relx=.835, rely=.37,anchor= CENTER, width=400)
+        menu2.place(relx=.835, rely=.37,anchor= CENTER, width=int(width*0.2777))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.912, rely=.42,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.912, rely=.42,anchor= CENTER)
         
 
         Label(self, text='التكلفه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.5, rely=.3,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         cost = IntVar()
         entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.37,anchor= CENTER, width=200)
+        entry1.place(relx=.5, rely=.37,anchor= CENTER, width=int(width*0.138))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.51, rely=.42,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.51, rely=.42,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.1, rely=.3,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.1, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.1, rely=.37,anchor= CENTER, width=200)
+        entry1.place(relx=.1, rely=.37,anchor= CENTER, width=int(width*0.138))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.11, rely=.42,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.11, rely=.42,anchor= CENTER)
         
         
         Label(self, text='ملاحظات',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.9, rely=.5,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.5,anchor= CENTER, width=int(width*0.138))
 
         comment = StringVar()
         entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.78, rely=.57,anchor= CENTER, width=600,)
+        entry1.place(relx=.78, rely=.57,anchor= CENTER, width=int(width*0.4),)
 
         Label(self, text='التاريخ',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.375, rely=.5,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.375, rely=.5,anchor= CENTER, width=int(width*0.138))
 
-        c_date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        c_date = DateEntry(self,width=int(width*0.02),bg="darkblue",fg="white", font = ('fantasy', 15, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        c_date.place(relx=.25, rely=.57,anchor= CENTER, width=600)
+        c_date.place(relx=.25, rely=.57,anchor= CENTER, width=int(width*0.4))
         
         
         
@@ -1175,16 +1180,16 @@ class Client_Form(tk.Toplevel):
                         messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
-        Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
-                command=insertClient).place(relx=.5, rely=.85,anchor= CENTER)
+                command=insertClient).place(relx=.5, rely=.9,anchor= CENTER)
         
         
-        Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
-                command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)
+                command=self.destroy).place(relx=.1, rely=.95,anchor= CENTER)
 
 # -------------------------------------------------------------------------------------------------------
 
@@ -1202,7 +1207,7 @@ class Service_Form(tk.Toplevel):
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
                         
         Label(self, text='الاسم',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold' ).place(relx=.8, rely=.1,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold' ).place(relx=.8, rely=.1,anchor= CENTER, width=int(width*0.138))
 
 
         def check_input(event):
@@ -1221,60 +1226,60 @@ class Service_Form(tk.Toplevel):
         menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.55, rely=.1,anchor= CENTER, width=600)
+        menu.place(relx=.55, rely=.1,anchor= CENTER, width=int(width*0.417))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.15,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.15,anchor= CENTER)
 
 
         Label(self, text='الخدمه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.22,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.22,anchor= CENTER, width=int(width*0.138))
 
         service = tk.StringVar()
         menu2 = ttk.Combobox(self, textvariable = service, font=('Helvetica', 20,'bold'), values = services)
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu2.place(relx=.55, rely=.22,anchor= CENTER, width=600)
+        menu2.place(relx=.55, rely=.22,anchor= CENTER, width=int(width*0.417))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.27,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.27,anchor= CENTER)
         
 
         Label(self, text='التكلفه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.34,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.34,anchor= CENTER, width=int(width*0.138))
 
         cost = IntVar()
         entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.34,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.55, rely=.34,anchor= CENTER, width=int(width*0.417), height=50)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.39,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.392,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.58,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.58,anchor= CENTER, width=int(width*0.138))
 
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.58,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.55, rely=.58,anchor= CENTER, width=int(width*0.417), height=int(height*0.06))
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.69, rely=.63,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.63,anchor= CENTER)
         
 
         Label(self, text='ملاحظات',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.7,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.7,anchor= CENTER, width=int(width*0.138))
 
         comment = StringVar()
         entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.7,anchor= CENTER, width=600, height=50)
+        entry1.place(relx=.55, rely=.7,anchor= CENTER, width=int(width*0.417), height=int(height*0.06))
 
 
         Label(self, text='التاريخ',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.8, rely=.46,anchor= CENTER, width=200)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.46,anchor= CENTER, width=int(width*0.138))
 
-        c_date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 25, 'bold'),
+        c_date = DateEntry(self,width=30,bg="darkblue",fg="white", font = ('fantasy', 15, 'bold'),
         year=datetime.now().year,month=datetime.now().month,day=datetime.now().day
         ,locale='en_US', date_pattern='dd/MM/yyyy')
-        c_date.place(relx=.675, rely=.46,anchor= CENTER, width=200, height=50)
+        c_date.place(relx=.675, rely=.46,anchor= CENTER, width=int(width*0.138), height=int(height*0.06))
         
         
         def addService():
@@ -1394,15 +1399,16 @@ class Service_Form(tk.Toplevel):
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
-        Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
-                command=addService).place(relx=.5, rely=.8,anchor= CENTER)
+                command=addService).place(relx=.5, rely=.9,anchor= CENTER)
         
-        Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+        
+        Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
                 text='اغلاق',
-                command=self.destroy).place(relx=.1, rely=.9,anchor= CENTER)
+                command=self.destroy).place(relx=.1, rely=.95,anchor= CENTER)
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -1435,13 +1441,13 @@ class Delete(tk.Toplevel):
                         menu['values'] = data
 
         Label(self, text='اسم العميل',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.63, rely=.3,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.63, rely=.3,anchor= CENTER)
 
         name = StringVar()
         menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu.place(relx=.5, rely=.35,anchor= CENTER, width=600)
+        menu.place(relx=.5, rely=.35,anchor= CENTER, width=int(width*0.55))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
@@ -1485,45 +1491,45 @@ class Main(tk.Tk):
         self['bg']='#E5E8C7'
 
         Label(self, text='Mr.Wagdy Latif For Accounting Services',
-        bg = '#D85426', fg = 'white', font = 'fantasy 30 bold', borderwidth=20, relief="ridge", padx=20, pady=40).place(relx=.5, rely=.1,anchor= CENTER)
+        bg = '#D85426', fg = 'white', font = 'fantasy 30 bold', borderwidth=20, relief="ridge", padx=20, pady=20).place(relx=.5, rely=.1,anchor= CENTER)
                 
-        Button(self, height = 1, width = 13, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
+        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='عملاء',
                 command=self.open_insert).place(relx=.8, rely=.35,anchor= CENTER)
 
-        Button(self, height = 1, width = 13, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
+        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='خدمات',
                 command=self.open_add).place(relx=.8, rely=.5,anchor= CENTER) 
 
-        Button(self, height = 1, width = 13, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
+        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='مدفوعات',
                 command=self.open_payment).place(relx=.8, rely=.65,anchor= CENTER)
 
-        Button(self, height = 1, width = 13, bg = 'green', fg = 'white',
-        activebackground='green', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = 'green', fg = 'white',
+        activebackground='green', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='مصروفات',
                 command=self.open_exp_form).place(relx=.8, rely=.8,anchor= CENTER) 
 
-        Button(self, height = 2, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='العملاء',
                 command=self.open_search).place(relx=.5, rely=.35,anchor= CENTER)
 
-        Button(self, height = 2, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='الإيرادات',
                 command=self.open_revenue).place(relx=.5, rely=.6,anchor= CENTER)       
 
-        Button(self, height = 2, width = 15, bg = '#05659E', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 2, width = 12, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text= 'المصروفات',
                 command=self.open_exp).place(relx=.5, rely=.85,anchor= CENTER)        
 
-        Button(self, height = 1, width = 13, bg = 'red', fg = 'white',
-        activebackground='#43516C', font = 'fantasy 30 bold', bd = '8px solid #DBA531', 
+        Button(self, height = 1, width = 10, bg = 'red', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
                 text='حذف',
                 command=self.open_delete).place(relx=.2, rely=.6,anchor= CENTER)
 
