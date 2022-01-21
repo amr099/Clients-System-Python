@@ -1,0 +1,4 @@
+standrize font
+standrize width and height
+striped treeview
+better way of sorting

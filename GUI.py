@@ -536,29 +536,29 @@ class Expenses_Form(tk.Toplevel):
         menu.bind('<KeyRelease>', select_input)
 
         Label(self, text='.اترك خانة (اسم العميل) فارغه اذا كان المصروف غير متعلق بعميل معين',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.577, rely=.15,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.59, rely=.15,anchor= CENTER)
 
 
         Label(self, text='المبلغ',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.75, rely=.25,anchor= CENTER, width=int(width*0.14))
 
         amount = IntVar()
-        entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = font20)
         entry1.place(relx=.5, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.64, rely=.31,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.65, rely=.31,anchor= CENTER)
         
 
         Label(self, text='المصروف',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.75, rely=.4,anchor= CENTER, width=int(width*0.14))
 
         comment = StringVar()
-        entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = font20)
         entry1.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.4), height=50)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.64, rely=.46,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.65, rely=.46,anchor= CENTER)
 
 
         Label(self, text='التاريخ',
@@ -1002,24 +1002,24 @@ class Payment_Form(tk.Toplevel):
         menu.bind('<KeyRelease>', select_input)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.15,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.705, rely=.15,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.8, rely=.25,anchor= CENTER, width=int(width*0.14))
 
         amount = IntVar()
-        entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = font20)
         entry1.place(relx=.55, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.31,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.705, rely=.31,anchor= CENTER)
         
 
         Label(self, text='ملاحظات',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.8, rely=.4,anchor= CENTER, width=int(width*0.14))
 
-        comment =  Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment =  Text(self, font = font20, height=3)
         comment.place(relx=.55, rely=.42,anchor= CENTER, width=int(width*0.4))
 
 
@@ -1182,7 +1182,7 @@ class Search(tk.Toplevel):
 
         
         Label(self, text='اسم العميل',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.63, rely=.35,anchor= CENTER, width=int(width*0.14))
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.69, rely=.35,anchor= CENTER, width=int(width*0.14))
 
         name = StringVar()
         menu = ttk.Combobox(self, textvariable= name, font=font20,values = entries )
@@ -1191,7 +1191,7 @@ class Search(tk.Toplevel):
         menu.bind('<KeyRelease>', search_input)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.637, rely=.45,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.45,anchor= CENTER)
 
 
         def search():
@@ -1398,11 +1398,11 @@ class Client_Form(tk.Toplevel):
         self['bg']=baseColor
 
         Label(self, text='الاسم',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.1,anchor= CENTER, width=int(width*0.138))
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.92, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         name = tk.StringVar()
-        entry1 = ttk.Entry(self, textvariable=name, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.75, rely=.17,anchor= CENTER, width=int(width*0.4))
+        entry1 = ttk.Entry(self, textvariable=name, justify = LEFT, font = font20)
+        entry1.place(relx=.77, rely=.17,anchor= CENTER, width=int(width*0.4))
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = baseColor, fg = labelColor ,font = font10).place(relx=.92, rely=.22,anchor= CENTER)
@@ -1411,26 +1411,26 @@ class Client_Form(tk.Toplevel):
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.4, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         code = IntVar()
-        entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = font20)
         entry1.place(relx=.4, rely=.17,anchor= CENTER, width=int(width*0.138))
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.4, rely=.22,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.425, rely=.22,anchor= CENTER)
 
 
         Label(self, text='رقم التسجيل',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.1, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         record = tk.IntVar()
-        entry1 = ttk.Entry(self, textvariable=record, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=record, justify = LEFT, font = font20)
         entry1.place(relx=.1, rely=.17,anchor= CENTER, width=int(width*0.138))
 
 
         Label(self, text='رقم التليفون',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.75,anchor= CENTER, width=int(width*0.138))
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.92, rely=.75,anchor= CENTER, width=int(width*0.138))
 
         phone = tk.StringVar()
-        entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = font20)
         entry1.place(relx=.78, rely=.8,anchor= CENTER, width=int(width*0.4))
 
 
@@ -1438,12 +1438,12 @@ class Client_Form(tk.Toplevel):
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.375, rely=.75,anchor= CENTER, width=int(width*0.138))
 
         address = tk.StringVar()
-        entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = font20)
         entry1.place(relx=.25, rely=.8,anchor= CENTER, width=int(width*0.4))
 
 
         Label(self, text='الخدمه',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.3,anchor= CENTER, width=int(width*0.138))
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.92, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         services = []
         ws = wb['الخدمات']
@@ -1466,39 +1466,39 @@ class Client_Form(tk.Toplevel):
         service = tk.StringVar()
         menu2 = ttk.Combobox(self, textvariable = service, font=font20, values = services) 
         app.option_add('*TCombobox*Listbox.font', font20)
-        menu2.place(relx=.75, rely=.37,anchor= CENTER, width=int(width*0.43))
+        menu2.place(relx=.77, rely=.37,anchor= CENTER, width=int(width*0.4))
         menu2.bind('<KeyRelease>', check_input_services)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.93, rely=.42,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.92, rely=.42,anchor= CENTER)
         
 
         Label(self, text='التكلفه',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.4, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         cost = IntVar()
-        entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = font20)
         entry1.place(relx=.4, rely=.37,anchor= CENTER, width=int(width*0.138))
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.4, rely=.42,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.425, rely=.42,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.1, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         amount = IntVar()
-        entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = font20)
         entry1.place(relx=.1, rely=.37,anchor= CENTER, width=int(width*0.138))
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.11, rely=.42,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.125, rely=.42,anchor= CENTER)
         
         
         Label(self, text='ملاحظات',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.5,anchor= CENTER, width=int(width*0.138))
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.92, rely=.5,anchor= CENTER, width=int(width*0.138))
 
-        comment = Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment = Text(self, font = font20, height=3)
         comment.place(relx=.78, rely=.62,anchor= CENTER, width=int(width*0.4),)
 
 
@@ -1642,7 +1642,7 @@ class Service_Form(tk.Toplevel):
         menu.bind('<KeyRelease>', check_input_names)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.15,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.71, rely=.15,anchor= CENTER)
 
 
         Label(self, text='الخدمه',
@@ -1674,35 +1674,35 @@ class Service_Form(tk.Toplevel):
         menu2.bind('<KeyRelease>', check_input_services)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.27,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.71, rely=.27,anchor= CENTER)
         
 
         Label(self, text='التكلفه',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.8, rely=.34,anchor= CENTER, width=int(width*0.138))
 
         cost = IntVar()
-        entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = font20)
         entry1.place(relx=.55, rely=.34,anchor= CENTER, width=int(width*0.417), height=50)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.392,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.71, rely=.392,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.8, rely=.58,anchor= CENTER, width=int(width*0.138))
 
         amount = IntVar()
-        entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = font20)
         entry1.place(relx=.55, rely=.58,anchor= CENTER, width=int(width*0.417), height=int(height*0.06))
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = font10).place(relx=.69, rely=.63,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.715, rely=.63,anchor= CENTER)
         
 
         Label(self, text='ملاحظات',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.8, rely=.7,anchor= CENTER, width=int(width*0.138))
 
-        comment =  Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment =  Text(self, font = font20, height=3)
         comment.place(relx=.55, rely=.73,anchor= CENTER, width=int(width*0.417))
 
 
@@ -1876,7 +1876,7 @@ class Delete(tk.Toplevel):
 
 
         Label(self, text='اسم العميل',
-        bg = baseColor, fg = labelColor ,font = font20).place(relx=.63, rely=.3,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font20).place(relx=.72, rely=.3,anchor= CENTER)
 
         name = StringVar()
         menu = ttk.Combobox(self, textvariable= name, font=font20,values = entries )
@@ -1885,7 +1885,7 @@ class Delete(tk.Toplevel):
         menu.bind('<KeyRelease>', check_input)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = baseColor, fg = labelColor ,font = 'fantasy 12').place(relx=.64, rely=.4,anchor= CENTER)
+        bg = baseColor, fg = labelColor ,font = font10).place(relx=.73, rely=.4,anchor= CENTER)
 
         def delete():
                 response = messagebox.askquestion('Deleted!', f'{name.get()} هل تريد ان تحذف كشف حساب العميل')
