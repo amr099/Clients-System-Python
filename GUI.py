@@ -1,6 +1,3 @@
-# Change excel file name 
-# Change Password
-
 from tkinter import *
 from tkinter import Entry, Label, Tk, ttk, messagebox
 import tkinter as tk
@@ -9,72 +6,331 @@ from datetime import date, datetime
 from tkcalendar import DateEntry
 from babel.numbers import *
 
+# Get Resolution of Screen.
 root = tk.Tk()
 width = int(root.winfo_screenwidth() * 0.9)
 height = int(root.winfo_screenheight() * 0.9)
-
 root.destroy()
 
+# Load Excel Files.
 file = 'العملاء.xlsx' 
 file0 = 'المصروفات.xlsx'
 try:
-  wb = load_workbook(file)
-  wb0 = load_workbook(file0)
+        wb = load_workbook(file)
+        wb0 = load_workbook(file0)
 except:
-  messagebox.showerror('Files Not Found!',' ملفات الاكسيل غير موجوده')
+        messagebox.showerror('Files Not Found!',' ملفات الاكسيل غير موجوده')
+        print('Files do not exist')
 
 
-services = ['اتعاب لجنه داخلية','اضافة سياره','اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
-        ,'اقرار ضرائب قيمه مضافه', 'اقرار ضرائب مرتبات', 'بطاقه ضريبيه'
-        ,'تجديد اشتراك البوابه الالكترونيه', 'تحت الحساب','تسوية ملف ضريبى', 'تعديل النشاط',
-        'جواب مرور', 'حفظ الملف بالضرائب','رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه'
-        ,'رسوم تجديد مستوردين', 'سجل تجارى','سداد ضرائب عامه'
-        , 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
-        ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
-        'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
-        'ميزانيه عموميه', 'نماذج 41 ض',]
 
-# class Add_Service(tk.Toplevel):
-#       def __init__(self, parent):
-#         super().__init__(parent)
+# services = ['اتعاب لجنه داخلية','اضافة سياره','اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
+#         ,'اقرار ضرائب قيمه مضافه', 'اقرار ضرائب مرتبات', 'بطاقه ضريبيه'
+#         ,'تجديد اشتراك البوابه الالكترونيه', 'تحت الحساب','تسوية ملف ضريبى', 'تعديل النشاط',
+#         'جواب مرور', 'حفظ الملف بالضرائب','رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه'
+#         ,'رسوم تجديد مستوردين', 'سجل تجارى','سداد ضرائب عامه'
+#         , 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
+#         ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
+#         'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
+#         'ميزانيه عموميه', 'نماذج 41 ض',]
 
-#         self.geometry(f'{width}x{height}')
-#         self.title('اضافة خدمات جديده')
-#         self['bg']='#E5E8C7'
+
+
+class Edit_Client(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.geometry(f'{width}x{height}')
+        self.title('تعديل بيانات عميل')
+        self['bg']='#E5E8C7'
+
+
+        entries = []
+        for sheet in wb.worksheets:
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
+                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
+                        
+        Label(self, text='اختر العميل',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold' ).place(relx=.5, rely=.05,anchor= CENTER, width=int(width*0.138))
+
+        codeentries = []
+        for sheet in wb.worksheets:
+                if sheet.cell(row=1,column=2).value != None :
+                        codeentries.append(sheet.cell(row=1,column=2).value)                
+
+        def select_input_names(event):
+                value = event.widget.get()
+                if value == '':
+                        menu['values'] = entries
+                else:
+                        data = []
+                        for item in entries:
+                                if value.lower() in item.lower():
+                                        data.append(item)
+
+                        menu['values'] = data
+
+        name = StringVar()
+        menu = ttk.Combobox(self, textvariable= name, font=('Helvetica', 20,'bold'),values = entries )
+        text_font = ('Courier New', '20', 'bold')
+        app.option_add('*TCombobox*Listbox.font', text_font)
+        menu.place(relx=.5, rely=.1,anchor= CENTER, width=int(width*0.417))
+        menu['values'] = entries
+        menu.bind('<KeyRelease>', select_input_names)
+
+        Label(self, text='.برجاء عدم ترك الخانه فارغه',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.65, rely=.15,anchor= CENTER)
+
+
+        Label(self, text='قم بادخال البيانات المراد تعديلها',
+        bg = '#E5E8C7', fg = '#E85E3F' ,font = 'fantasy 25 bold').place(relx=.5, rely=.25,anchor= CENTER,)
+
+
+        Label(self, text='الاسم',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold' ).place(relx=.9, rely=.35,anchor= CENTER, width=int(width*0.138))
+
+        edit_name = tk.StringVar()
+        entry1 = ttk.Entry(self, textvariable=edit_name, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.65, rely=.35,anchor= CENTER, width=int(width*0.4))
+
+
+        Label(self, text='الكود',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.65,anchor= CENTER, width=int(width*0.138))
+
+        code = IntVar()
+        entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.77, rely=.65,anchor= CENTER, width=int(width*0.138))
+
+
+        Label(self, text='رقم التسجيل',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.75,anchor= CENTER, width=int(width*0.138))
+
+        record = tk.IntVar()
+        entry1 = ttk.Entry(self, textvariable=record, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.77, rely=.75,anchor= CENTER, width=int(width*0.138))
+
+
+        Label(self, text='رقم التليفون',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.45,anchor= CENTER, width=int(width*0.1))
+
+        phone = tk.StringVar()
+        entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.65, rely=.45,anchor= CENTER, width=int(width*0.4))
+
+
+        Label(self, text='العنوان',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.55,anchor= CENTER, width=int(width*0.1))
+
+        address  = tk.StringVar()
+        entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = ('fantasy', 25, 'bold'))
+        entry1.place(relx=.65, rely=.55,anchor= CENTER, width=int(width*0.4))
+
+
+        def edit():
+                try:
+                        ws = wb[name.get()]
+                        ws0 = wb0[name.get()]
+                except:
+                        messagebox.showerror('Not Exists!','الاسم غير موجود')
+                        print('cant find worksheet')
+                        return False 
+                try:
+                        name.get() and code.get() and record.get() and phone.get() and address.get() 
+                except:
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ')
+                        print('invalid input')
+                        return False
+
+                # not None Validation
+                if name.get() == None or code.get() == None :
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ') 
+                        print('None input')
+                        return False
+
+                # not "" validation        
+                if name.get() == "" :
+                        messagebox.showerror('Invalid!','من فضلك نأكد من ادخال الاسم  ')
+                        print('No Name')
+                        return False
+                
+                # phone validation
+                if not phone.get().isnumeric:
+                        messagebox.showerror('Invalid!','من فضلك نأكد من ادخال التليفون بطريقه صحيحه ')
+                        print('Phone is not numeric')
+                        return False
+
+                # Case validations
+
+                if code.get() in codeentries:
+                        # self.destroy()
+                        messagebox.showerror('Already Exists!','الكود موجود بالفعل ') 
+                        print('code already exists')
+                        return False
+
+                else:
+                        if edit_name.get() != '':
+                                ws['A1'] = edit_name.get()
+                                ws.title = f'{edit_name.get()} ({ws["B1"].value})'
+
+                        if code.get() != 0: 
+                                ws['B1'] = code.get()
+                                ws.title = f'{ws["A1"].value} ({code.get()})'
+
+                        if edit_name.get() != '' and code != 0:
+                                ws.title = f'{edit_name.get()} ({code.get()})'        
+
+                        if record.get() != 0:        
+                                ws['C1'] = record.get()
+
+                        if phone.get() != '':
+                                ws['D1'] = phone.get()
+
+                        if address.get() != '':
+                                ws['E1'] = address.get()
+                        wb.save(file)
+
+                        if edit_name.get() != '':
+                                ws0['A1'] = edit_name.get()
+                                ws0.title = f'{edit_name.get()} ({ws0["B1"].value})'
+
+                        if code.get() != 0: 
+                                ws0['B1'] = code.get()
+                                ws0.title = f'{ws0["A1"].value} ({code.get()})'
+
+                        if edit_name.get() != '' and code != 0:
+                                ws0.title = f'{edit_name.get()} ({code.get()})'
+
+                        if record.get() != 0:        
+                                ws0['C1'] = record.get()
+
+                        if phone.get() != '':
+                                ws0['D1'] = phone.get()
+
+                        if address.get() != '':
+                                ws0['E1'] = address.get()
+                        wb0.save(file0)
+                        messagebox.showinfo('Done','تم التعديل بنجاح ')
+
+
+        Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
+                text='تعديل',
+                command=edit).place(relx=.5, rely=.9,anchor= CENTER)
+        
+        
+        Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
+                text='اغلاق',
+                command=self.destroy).place(relx=.1, rely=.95,anchor= CENTER)
+
+
+class New_Service(tk.Toplevel):
+      def __init__(self, parent):
+        super().__init__(parent)
+
+        self.geometry(f'{width}x{height}')
+        self.title('اضافة خدمات جديده')
+        self['bg']='#E5E8C7'
 
         
-#         Label(self, text='خدمه جديده',
-#         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.63, rely=.35,anchor= CENTER, width=int(width*0.14))
-
-#         new_service = tk.StringVar()
-#         entry1 = ttk.Entry(self, textvariable=new_service, justify = LEFT, font = ('fantasy', 25, 'bold'))
-#         entry1.place(relx=.637, rely=.45,anchor= CENTER, width=int(width*0.4))
-
-
-#         def newService():
-#                 try:
-#                         new_service.get()
-#                         if new_service.get() not in services:
-#                                 services.append(new_service.get())
-#                         else:
-#                                 messagebox.showinfo('already exists!','هذه الخدمه موجوده بالفعل')
-#                 except:
-#                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-#                         return
-
-
-#         Button(self, height = 1, width = 15, bg = 'red', fg = 'white',
-#         activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
-#                 text='اضافه',
-#                 command=newService).place(relx=.5, rely=.5,anchor= CENTER)
-        
-#         Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
-#         activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
-#                 text='اغلاق',
-#                 command=self.destroy).place(relx=.5, rely=.8,anchor= CENTER)
+        Label(self, text='قائمة الخدمات',
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.5, rely=.3,anchor= CENTER, width=int(width*0.14))
 
         
+        def select_input_services(event):
+                value = event.widget.get()
+                if value == '':
+                        menu2['values'] = services
+                else:
+                        data = []
+                        for item in services:
+                                if value.lower() in item.lower():
+                                        data.append(item)
 
+                        menu2['values'] = data
+        
+        services = []
+        ws = wb['الخدمات']
+        for cell in ws['A']:
+                if cell.value != None or cell.value != '':
+                        services.append(cell.value)
+
+        new_service = tk.StringVar()
+        menu2 = ttk.Combobox(self, textvariable = new_service, font=('Helvetica', 20,'bold'), values = services) 
+        text_font = ('Courier New', '20', 'bold')
+        app.option_add('*TCombobox*Listbox.font', text_font)
+        menu2.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.5))
+        menu2.bind('<KeyRelease>', select_input_services)
+        
+
+        def newService():
+                try:
+                        new_service.get()
+                
+                        if new_service.get() == '':
+                                messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات  المطلوبه ')
+                                print('No Service')
+                                return False
+
+                        if new_service.get() not in services:
+                                ws = wb['الخدمات']
+                                ws.append([new_service.get()])
+                                wb.save(file)
+                                self.destroy()
+                                messagebox.showinfo('Done!','تم اضافة خدمه جديده')
+
+                        if new_service.get() in services:
+                                messagebox.showerror('already exists!','هذه الخدمه موجوده بالفعل')
+                except:
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
+                        print('invalid service')
+                        return False
+
+
+        def deleteService():
+                try:
+                        new_service.get()
+                
+                        if new_service.get() == '':
+                                messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات  المطلوبه ')
+                                print('No Service')
+                                return False
+
+                        if new_service.get() in services:
+                                ws = wb['الخدمات']
+                                for i in range(1,ws.max_row+1):
+                                        if cell(column=1, row=i).value == new_service.get():
+                                                ws.delete_rows(i,1)
+                                                wb.save(file)     
+                                                self.destroy()            
+                                                messagebox.showinfo('Done!','تم الحذف')
+                        if new_service.get() not in services:
+                                messagebox.showerror('not exists!','هذه الخدمه غير موجوده ')
+                                print('Service already exists')
+                                return False
+                except:
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
+                        print('invalid ervice')
+                        return False
+
+
+
+        Button(self, height = 1, width = 12, bg = 'green', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+                text='اضافه',
+                command=newService).place(relx=.4, rely=.55,anchor= CENTER)
+
+        Button(self, height = 1, width = 12, bg = 'red', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 20 bold', bd = '8px solid #DBA531', 
+                text='حذف',
+                command=deleteService).place(relx=.6, rely=.55,anchor= CENTER)        
+        
+        Button(self, height = 1, width = 10, bg = 'grey', fg = 'white',
+        activebackground='#43516C', font = 'fantasy 15 bold', bd = '8px solid #DBA531', 
+                text='اغلاق',
+                command=self.destroy).place(relx=.5, rely=.8,anchor= CENTER)
+
+        
 
 class Expenses_View(tk.Toplevel):
       def __init__(self, parent):
@@ -108,7 +364,7 @@ class Expenses_View(tk.Toplevel):
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=100,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -119,69 +375,62 @@ class Expenses_View(tk.Toplevel):
                 treev.configure(xscrollcommand = verscrlbar.set)
                 treev["columns"] = ("1", "2")
                 treev['show'] = 'headings'
-                treev.column("1", width = int(width*0.28),anchor ='e')
-                treev.column("2", width = int(width*0.83),anchor ='e')
+                treev.column("1", width = int(width*0.3),anchor ='e')
+                treev.column("2", width = int(width*0.7),anchor ='e')
                 treev.heading("1", text ="المصروف")
                 treev.heading("2", text ="الحساب")
 
-                services.append()
 
                 expenses = []
                 try:
-                        # if Expenses worksheet exists :
                         ws0 = wb0['مصروفات اداريه']
-                        expense = ''
-                        for i in range (1, ws0.max_row+1):
-                                # check row
-                                try:
-                                        celldate = date(
-                                        ws0.cell(row=i, column=4).value,
-                                        ws0.cell(row=i, column=5).value,
-                                        ws0.cell(row=i, column=6).value)
-                                except:
-                                        continue
-                                if celldate >= startdate.get_date() and celldate <= enddate.get_date():
-                                        if ws0.cell(row=i,column=3).value not in expenses :
-                                                expenses.append(ws0.cell(row=i,column=3).value)
-                                                expense = str(ws0.cell(row=i,column=3).value)
-                                                amount = 0 
-                                                for i in range (1, ws0.max_row+1):
-                                                        if str(ws0.cell(row=i,column=3).value) == expense:
-                                                                amount += int(ws0.cell(row=i,column=2).value)
-                                                treev.insert("", 'end', text ="L7",
-                                                        values =(amount,expense), tags = ("expense",))
-                                                treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 22))
                 except:
-                        # self.destroy()
-                        messagebox.showinfo('Not Found!','لا يوجد مصروفات اداريه حتى الان')  
-                        
+                        messagebox.showinfo('Not Found!','لا يوجد مصروفات اداريه حتى الان')
+                        print('No Manegerial Expenses')  
+                        return False
+
+                expense = ''
+                for i in range (1, ws0.max_row+1):
+                        # Check if row date exists.
+                        try:
+                                celldate = date(
+                                ws0.cell(row=i, column=4).value,
+                                ws0.cell(row=i, column=5).value,
+                                ws0.cell(row=i, column=6).value)
+                        except:
+                                continue
+                        # New Expense.
+                        if ws0.cell(row=i,column=3).value not in expenses :
+                                expenses.append(ws0.cell(row=i,column=3).value)
+                                expense = ws0.cell(row=i,column=3).value
+                                amount = 0 
+                                for i in range (1, ws0.max_row+1):
+                                        if ws0.cell(row=i,column=3).value == expense:
+                                                # If Date Matches.
+                                                if celldate >= startdate.get_date() and celldate <= enddate.get_date():
+                                                        amount += int(ws0.cell(row=i,column=2).value)
+                                treev.insert("", 'end', text ="L7",
+                                        values =(amount,expense), tags = ("expense",))
+                                treev.tag_configure('expense', background='#e1dddd', font=('Helvetica', 22))
 
         def clientsExpenses():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
-                
                 style = ttk.Style()
-                
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=100,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
-
                 verscrlbar = ttk.Scrollbar(self,
                                 orient ="vertical",
                                 command = treev.yview)
-
                 verscrlbar.pack(side ='left', fill ='x')   
                 treev.configure(xscrollcommand = verscrlbar.set)
-
                 treev["columns"] = ("1", "2", "3")
-
                 treev['show'] = 'headings'
-        
                 treev.column("1", width = int(width*0.42),anchor ='e')
                 treev.column("2", width = int(width*0.55),anchor ='e')
                 treev.column("3", width = int(width*0.14),anchor ='e')
-                
                 treev.heading("1", text ="اجمالى المصروفات")
                 treev.heading("2", text ="الاسم")
                 treev.heading("3", text ="الكود")
@@ -189,7 +438,7 @@ class Expenses_View(tk.Toplevel):
                 for expenses_sheet in wb0.worksheets:
                         client_expenses = 0
                         ws = expenses_sheet
-                        if (ws.cell(row=1,column=2).value) != None and expenses_sheet.title != 'مصروفات اداريه':
+                        if (ws.cell(row=1,column=1).value) != None or expenses_sheet.title != 'مصروفات اداريه' or expenses_sheet.title != 'الخدمات':
                                 for i in range(4, ws.max_row+1):
                                         try:
                                                 celldate = date(
@@ -200,16 +449,23 @@ class Expenses_View(tk.Toplevel):
                                                 continue
                                         if celldate >= startdate.get_date() and celldate <= enddate.get_date():
                                                         if ws.cell(row=i, column=2).value != None:
-                                                                client_expenses += ws.cell(row=i, column=2).value       
-                                treev.insert("", 'end', text ="L7",
-                                                values =(
-                                                '-' if int(client_expenses) == None else str(client_expenses),
-                                                '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
-                                                '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
-                                                ), tags = ('table',))
-                        treev.tag_configure('table', background='#eee', font=('Helvetica', 22)) 
-
-                
+                                                                client_expenses += ws.cell(row=i, column=2).value 
+                                if i%2 == 0:
+                                        treev.insert("", 'end', text ="L7",
+                                                        values =(
+                                                        '-' if int(client_expenses) == None else str(client_expenses),
+                                                        '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
+                                                        '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
+                                                        ), tags = ('even',))
+                                if i%2 != 0: 
+                                        treev.insert("", 'end', text ="L7",
+                                                        values =(
+                                                        '-' if int(client_expenses) == None else str(client_expenses),
+                                                        '-' if (ws.cell(row=1,column=1).value) == None else str(ws.cell(row=1,column=1).value),
+                                                        '-' if (ws.cell(row=1,column=2).value) == None else str(ws.cell(row=1,column=2).value),
+                                                        ), tags = ('odd',))                       
+                        treev.tag_configure('even', background='#e1dddd', font=('Helvetica', 22)) 
+                        treev.tag_configure('odd', background='#f5f3f3', font=('Helvetica', 22)) 
                 
                 
         Button(self, height = 1, width = 15, bg = '#05659E', fg = 'white',
@@ -239,15 +495,13 @@ class Expenses_Form(tk.Toplevel):
         
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه' :
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')                
-        if len(entries) < 1:
-                entries.append('لا يوجد عملاء')   
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'مصروفات اداريه' or sheet.title != 'الخدمات':
+                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')                  
 
         Label(self, text='اسم العميل',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.75, rely=.1,anchor= CENTER, width=int(width*0.14))
 
-        def check_input(event):
+        def select_input(event):
                 value = event.widget.get()
                 if value == '':
                         menu['values'] = entries
@@ -264,8 +518,8 @@ class Expenses_Form(tk.Toplevel):
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu.place(relx=.5, rely=.1,anchor= CENTER, width=int(width*0.4))
-        menu['values'] = entries
-        menu.bind('<KeyRelease>', check_input)
+        menu.bind('<KeyRelease>', select_input)
+
         Label(self, text='.اترك خانة (اسم العميل) فارغه اذا كان المصروف غير متعلق بعميل معين',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.577, rely=.15,anchor= CENTER)
 
@@ -276,6 +530,7 @@ class Expenses_Form(tk.Toplevel):
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.5, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.64, rely=.31,anchor= CENTER)
         
@@ -286,6 +541,7 @@ class Expenses_Form(tk.Toplevel):
         comment = StringVar()
         entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.4), height=50)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.64, rely=.46,anchor= CENTER)
 
@@ -299,122 +555,48 @@ class Expenses_Form(tk.Toplevel):
         c_date.place(relx=.625, rely=.55,anchor= CENTER, width=int(width*0.14), height=50)
         
         
-
-                
         def addExpenses():
                 try:
                         amount.get()
                 except:
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-                        # self.destroy()
-                        return      
+                        print('invalid amount')
+                        return False 
+
                 if amount.get() == '':
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه   ')
-                        # self.destroy()
-                        return   
+                        print('No amount')
+                        return False 
 
-                if name.get() == '':
-                        try:
-                                ws = wb0['مصروفات اداريه']
-                        except:
-                                ws = wb0.create_sheet('مصروفات اداريه') 
-                                ws.append(['التاريخ', 'المبلغ','المصروف'])
-                                ws.append([c_date.get_date().strftime("%d/%m/%Y")
-                                                        ,amount.get()
-                                                        ,comment.get()
-                                                        ,c_date.get_date().year
-                                                        ,c_date.get_date().month
-                                                        ,c_date.get_date().day,])
+                if comment.get() == '':
+                        messagebox.showerror('Invalid!','من فضلك قم بادخال خانة المصروف ')
+                        print('No Expense')
+                        return False     
 
-                        inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
-                        # check if transaction needs to be sorted by comparing date
-                        exists_dates = []
-                        for i in range (2, ws.max_row+1):
+                if amount.get() == 0:
+                        messagebox.showerror('Invalid!','من فضلك قم بتعديل خانة المبلغ')
+                        print('amount is 0')
+                        return False  
+
+                else:                
+                        if name.get() == '':
                                 try:
-                                        exists_dates.append(date(
-                                        ws.cell(column=4, row=i).value,
-                                        ws.cell(column=5, row=i).value,
-                                        ws.cell(column=6, row=i).value,))
+                                        ws = wb0['مصروفات اداريه']
                                 except:
-                                        continue
-
-                        for cell_date in exists_dates:
-                                if inserted_date < cell_date:
-                        # add all transactions to rows_list
-                                        rows_list = []
-                                        for i in range (2, ws.max_row+1):
-                                                try:
-                                                        cur_row_date = date(
-                                                        ws.cell(column=4, row=i).value,
-                                                        ws.cell(column=5, row=i).value,
-                                                        ws.cell(column=6, row=i).value,)
-                                                except:
-                                                        continue        
-                                                cur_row = [ws.cell(column=1, row=i).value,
-                                                ws.cell(column=2, row=i).value,
-                                                ws.cell(column=3, row=i).value,
-                                                ws.cell(column=4, row=i).value,
-                                                ws.cell(column=5, row=i).value,
-                                                ws.cell(column=6, row=i).value,
-                                                cur_row_date] 
-                                                rows_list.append(cur_row)
-                                        
-                                        rows_list.append([c_date.get_date().strftime("%d/%m/%Y")
-                                                ,amount.get()
-                                                ,comment.get()
-                                                ,c_date.get_date().year
-                                                ,c_date.get_date().month
-                                                ,c_date.get_date().day, inserted_date]) 
-                        
-                                        rows_list.sort(key=lambda x : x[6])
-                                        # delete rows 
-                                        ws.delete_rows(2, ws.max_row)
-                                        #add sorted rows
-                                        ws.append(rows_list[0])
-                                        rows_list.pop(0)
-                                        for row in rows_list:
-                                                ws.append(row)
-
-                                        wb0.save(file0)
-                                        # self.destroy()
-                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                                        break
-
-                        for cell_date in exists_dates:
-                                if not inserted_date < cell_date:
+                                        ws = wb0.create_sheet('مصروفات اداريه') 
+                                        ws.append(['التاريخ', 'المبلغ','المصروف'])
                                         ws.append([c_date.get_date().strftime("%d/%m/%Y")
-                                                ,amount.get()
-                                                ,comment.get()
-                                                ,c_date.get_date().year
-                                                ,c_date.get_date().month
-                                                ,c_date.get_date().day, inserted_date]) 
-                                        wb0.save(file0)
-                                        # self.destroy()
-                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')  
-                else:        
-                        try:
-                                ws = wb0[name.get()]
-                        except:
-                                messagebox.showerror('Not Exists!','الاسم غير موجود') 
-                                # self.destroy()        
-                        inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
-                        # first entry
-                        if ws.cell(row=4, column=1).value == None or ws.cell(row=4, column=1).value == '' :
-                                ws['A4'] = c_date.get_date().strftime("%d/%m/%Y")
-                                ws['B4'] = amount.get()
-                                ws['C4'] = comment.get()
-                                ws['D4'] = c_date.get_date().year
-                                ws['E4'] = c_date.get_date().month
-                                ws['F4'] = c_date.get_date().day
-                                ws['G4'] = inserted_date
-                                wb0.save(file0)
-                                # self.destroy()
-                                messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                        #no first entry        
-                        else:        
+                                                                ,amount.get()
+                                                                ,comment.get()
+                                                                ,c_date.get_date().year
+                                                                ,c_date.get_date().month
+                                                                ,c_date.get_date().day,])
+                                        return True                        
+
+                                inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
                                 # check if transaction needs to be sorted by comparing date
                                 exists_dates = []
-                                for i in range (4, ws.max_row+1):
+                                for i in range (2, ws.max_row+1):
                                         try:
                                                 exists_dates.append(date(
                                                 ws.cell(column=4, row=i).value,
@@ -422,13 +604,12 @@ class Expenses_Form(tk.Toplevel):
                                                 ws.cell(column=6, row=i).value,))
                                         except:
                                                 continue
-
+                                flag = False
                                 for cell_date in exists_dates:
                                         if inserted_date < cell_date:
-                                        
                                 # add all transactions to rows_list
                                                 rows_list = []
-                                                for i in range (4, ws.max_row+1):
+                                                for i in range (2, ws.max_row+1):
                                                         try:
                                                                 cur_row_date = date(
                                                                 ws.cell(column=4, row=i).value,
@@ -454,7 +635,7 @@ class Expenses_Form(tk.Toplevel):
                                 
                                                 rows_list.sort(key=lambda x : x[6])
                                                 # delete rows 
-                                                ws.delete_rows(4, ws.max_row)
+                                                ws.delete_rows(2, ws.max_row)
                                                 #add sorted rows
                                                 ws.append(rows_list[0])
                                                 rows_list.pop(0)
@@ -462,12 +643,99 @@ class Expenses_Form(tk.Toplevel):
                                                         ws.append(row)
 
                                                 wb0.save(file0)
-                                                # self.destroy()
+                                                flag = True
+                                                self.destroy()
                                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                                 break
 
-                                for cell_date in exists_dates:
-                                        if not inserted_date < cell_date:
+                                if flag == False:
+                                        ws.append([c_date.get_date().strftime("%d/%m/%Y")
+                                                ,amount.get()
+                                                ,comment.get()
+                                                ,c_date.get_date().year
+                                                ,c_date.get_date().month
+                                                ,c_date.get_date().day, inserted_date]) 
+                                        wb0.save(file0)
+                                        self.destroy()
+                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')  
+                        else:        
+                                try:
+                                        ws = wb0[name.get()]
+                                except:
+                                        messagebox.showerror('Not Exists!','الاسم غير موجود') 
+                                        print('clients expenes file not found')
+                                        return False
+
+                                inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
+                                # first entry
+                                if ws.cell(row=4, column=1).value == None or ws.cell(row=4, column=1).value == '' :
+                                        ws['A4'] = c_date.get_date().strftime("%d/%m/%Y")
+                                        ws['B4'] = amount.get()
+                                        ws['C4'] = comment.get()
+                                        ws['D4'] = c_date.get_date().year
+                                        ws['E4'] = c_date.get_date().month
+                                        ws['F4'] = c_date.get_date().day
+                                        ws['G4'] = inserted_date
+                                        wb0.save(file0)
+                                        self.destroy()
+                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                                #no first entry        
+                                else:        
+                                        # check if transaction needs to be sorted by comparing date
+                                        exists_dates = []
+                                        for i in range (4, ws.max_row+1):
+                                                try:
+                                                        exists_dates.append(date(
+                                                        ws.cell(column=4, row=i).value,
+                                                        ws.cell(column=5, row=i).value,
+                                                        ws.cell(column=6, row=i).value,))
+                                                except:
+                                                        continue
+
+                                        flag = False
+                                        for cell_date in exists_dates:
+                                                if inserted_date < cell_date:
+                                        # add all transactions to rows_list
+                                                        rows_list = []
+                                                        for i in range (4, ws.max_row+1):
+                                                                try:
+                                                                        cur_row_date = date(
+                                                                        ws.cell(column=4, row=i).value,
+                                                                        ws.cell(column=5, row=i).value,
+                                                                        ws.cell(column=6, row=i).value,)
+                                                                except:
+                                                                        continue        
+                                                                cur_row = [ws.cell(column=1, row=i).value,
+                                                                ws.cell(column=2, row=i).value,
+                                                                ws.cell(column=3, row=i).value,
+                                                                ws.cell(column=4, row=i).value,
+                                                                ws.cell(column=5, row=i).value,
+                                                                ws.cell(column=6, row=i).value,
+                                                                cur_row_date] 
+                                                                rows_list.append(cur_row)
+                                                        
+                                                        rows_list.append([c_date.get_date().strftime("%d/%m/%Y")
+                                                                ,amount.get()
+                                                                ,comment.get()
+                                                                ,c_date.get_date().year
+                                                                ,c_date.get_date().month
+                                                                ,c_date.get_date().day, inserted_date]) 
+                                        
+                                                        rows_list.sort(key=lambda x : x[6])
+                                                        # delete rows 
+                                                        ws.delete_rows(4, ws.max_row)
+                                                        #add sorted rows
+                                                        ws.append(rows_list[0])
+                                                        rows_list.pop(0)
+                                                        for row in rows_list:
+                                                                ws.append(row)
+
+                                                        wb0.save(file0)
+                                                        flag = True
+                                                        # self.destroy()
+                                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                                                        break
+                                        if flag == False:
                                                 ws.append([c_date.get_date().strftime("%d/%m/%Y")
                                                         ,amount.get()
                                                         ,comment.get()
@@ -477,16 +745,12 @@ class Expenses_Form(tk.Toplevel):
                                                 wb0.save(file0)
                                                 # self.destroy()
                                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                        
 
-                        
-                                                        
-                                                        
+
         Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
                 command=addExpenses).place(relx=.5, rely=.9,anchor= CENTER)
-        
         
         Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
         activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
@@ -523,34 +787,27 @@ class Revenues_View(tk.Toplevel):
         ,locale='en_US', date_pattern='dd/MM/yyyy')
         enddate.place(relx=.3, rely=.5,anchor= CENTER, width=int(width*0.14), height=50)
         
+
         def clientsRevenues():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
-                
                 style = ttk.Style()
-                
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=100,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
-
                 verscrlbar = ttk.Scrollbar(self,
                                 orient ="vertical",
                                 command = treev.yview)
-
                 verscrlbar.pack(side ='left', fill ='x')   
                 treev.configure(xscrollcommand = verscrlbar.set)
-
                 treev["columns"] = ("1", "2", "3", "4", "5")
-
                 treev['show'] = 'headings'
-        
                 treev.column("1", width = int(width*0.15),anchor ='e')
                 treev.column("2", width = int(width*0.15),anchor ='e')
                 treev.column("3", width = int(width*0.15),anchor ='e')
                 treev.column("4", width = int(width*0.4),anchor ='e')
                 treev.column("5", width = int(width*0.15),anchor ='e')
-                
                 treev.heading("1", text ="صافى الربح")
                 treev.heading("2", text ="المصروف")
                 treev.heading("3", text ="الايراد")
@@ -562,7 +819,7 @@ class Revenues_View(tk.Toplevel):
                         client_revenue = 0
                         amount = 0
                         ws = client_sheet
-                        if (ws.cell(row=1,column=2).value) != None and (ws.cell(row=1,column=2).value) != '' :
+                        if client_sheet.title != 'الخدمات' or client_sheet.title != 'المصروفات الاداريه':
                                 for i in range(4, ws.max_row+1):
                                         try:
                                                 celldate = date(
@@ -574,6 +831,7 @@ class Revenues_View(tk.Toplevel):
                                         if celldate >= startdate.get_date() and celldate <= enddate.get_date():
                                                 if ws.cell(row=i, column=4).value != None:
                                                         client_revenue += ws.cell(row=i, column=4).value
+
                                 for expenses_sheet in wb0.worksheets:
                                         if expenses_sheet.title == client_sheet.title: 
                                                 ws = expenses_sheet
@@ -588,6 +846,7 @@ class Revenues_View(tk.Toplevel):
                                                         if celldate >= startdate.get_date() and celldate <= enddate.get_date():
                                                                 if ws.cell(row=i, column=2).value != None:
                                                                         client_expenses += ws.cell(row=i, column=2).value
+
                                 amount = client_revenue - client_expenses
                                 treev.insert("", 'end', text ="L7",
                                                 values =(
@@ -599,64 +858,66 @@ class Revenues_View(tk.Toplevel):
                                                 ), tags = ('table',))
                 treev.tag_configure('table', background='#eee', font=('Helvetica', 22)) 
 
+
         def totalRevenues():      
                 total_revenue = 0
                 total_expenses = 0
                 income = 0
                 for sheet in wb.worksheets:
-                        ws = sheet
-                        for i in range(4, ws.max_row+1):
-                                try:
-                                        celldate = date(
-                                                ws.cell(row=i, column=7).value,
-                                                ws.cell(row=i, column=8).value,
-                                                ws.cell(row=i, column=9).value)
-                                except:
-                                        continue
-                                if celldate >= startdate.get_date() and celldate <= enddate.get_date():
+                        if sheet.title != 'الخدمات':
+                                ws = sheet
+                                for i in range(4, ws.max_row+1):
                                         try:
-                                                total_revenue += ws.cell(row=i, column=4).value
-                                        except:
-                                                continue 
-                                        
-                for expenses_sheet in wb0.worksheets:
-                        ws = expenses_sheet
-                        for i in range(0, ws.max_row+1):
-                                try:    
-                                        celldate = date(
-                                                ws.cell(row=i, column=4).value,
-                                                ws.cell(row=i, column=5).value,
-                                                ws.cell(row=i, column=6).value)
-                                except:
-                                        continue
-                                if celldate >= startdate.get_date() and celldate <= enddate.get_date():
-                                        try:
-                                                total_expenses += ws.cell(row=i, column=2).value
+                                                celldate = date(
+                                                        ws.cell(row=i, column=7).value,
+                                                        ws.cell(row=i, column=8).value,
+                                                        ws.cell(row=i, column=9).value)
                                         except:
                                                 continue
-                                                        
-                income = total_revenue - total_expenses 
+                                        if celldate >= startdate.get_date() and celldate <= enddate.get_date():
+                                                try:
+                                                        total_revenue += ws.cell(row=i, column=4).value
+                                                except:
+                                                        continue 
+                                                
+                        for expenses_sheet in wb0.worksheets:
+                                ws = expenses_sheet
+                                for i in range(0, ws.max_row+1):
+                                        try:    
+                                                celldate = date(
+                                                        ws.cell(row=i, column=4).value,
+                                                        ws.cell(row=i, column=5).value,
+                                                        ws.cell(row=i, column=6).value)
+                                        except:
+                                                continue
+                                        if celldate >= startdate.get_date() and celldate <= enddate.get_date():
+                                                try:
+                                                        total_expenses += ws.cell(row=i, column=2).value
+                                                except:
+                                                        continue
+                                                                
+                        income = total_revenue - total_expenses 
 
-                Label(self, text='الايرادات',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.65,anchor= CENTER, width=int(width*0.14))
-                Label(self, text='المصروفات',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.65,anchor= CENTER, width=int(width*0.14))
-                Label(self, text='صافى الربح',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.2, rely=.65,anchor= CENTER, width=int(width*0.14))
-                Label(self, text=str(total_revenue),
-                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.75,anchor= CENTER, width=int(width*0.16))
-                Label(self, text='_',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.65, rely=.72,anchor= CENTER, width=int(width*0.14))
-                Label(self, text=str(total_expenses),
-                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.5, rely=.75,anchor= CENTER, width=int(width*0.16))
-                Label(self, text='=',
-                bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.35, rely=.75,anchor= CENTER, width=int(width*0.14))
-                Label(self, text=str(income),
-                bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
-                borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.2, rely=.75,anchor= CENTER, width=int(width*0.16))
-                                
+                        Label(self, text='الايرادات',
+                        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.65,anchor= CENTER, width=int(width*0.14))
+                        Label(self, text='المصروفات',
+                        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.65,anchor= CENTER, width=int(width*0.14))
+                        Label(self, text='صافى الربح',
+                        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.2, rely=.65,anchor= CENTER, width=int(width*0.14))
+                        Label(self, text=str(total_revenue),
+                        bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.8, rely=.75,anchor= CENTER, width=int(width*0.16))
+                        Label(self, text='_',
+                        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.65, rely=.72,anchor= CENTER, width=int(width*0.14))
+                        Label(self, text=str(total_expenses),
+                        bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.5, rely=.75,anchor= CENTER, width=int(width*0.16))
+                        Label(self, text='=',
+                        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 30 bold').place(relx=.35, rely=.75,anchor= CENTER, width=int(width*0.14))
+                        Label(self, text=str(income),
+                        bg = '#E85662', fg = 'white', font = 'fantasy 30 bold',
+                        borderwidth=5, relief="ridge", padx=20, pady=10).place(relx=.2, rely=.75,anchor= CENTER, width=int(width*0.16))
+                                        
 
         Button(self, height = 1, width = 18, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
@@ -686,15 +947,14 @@ class Payment_Form(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه':
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')                
-        if len(entries) < 1:
-                entries.append('لا يوجد عملاء')   
+
 
         Label(self, text='الاسم',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.1,anchor= CENTER, width=int(width*0.14))
 
-        def check_input(event):
+        def select_input(event):
                 value = event.widget.get()
                 if value == '':
                         menu['values'] = entries
@@ -711,8 +971,8 @@ class Payment_Form(tk.Toplevel):
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu.place(relx=.55, rely=.1,anchor= CENTER, width=int(width*0.4))
-        menu['values'] = entries
-        menu.bind('<KeyRelease>', check_input)
+        menu.bind('<KeyRelease>', select_input)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.15,anchor= CENTER)
 
@@ -723,6 +983,7 @@ class Payment_Form(tk.Toplevel):
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable = amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.55, rely=.25,anchor= CENTER, width=int(width*0.4), height=50)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.31,anchor= CENTER)
         
@@ -730,9 +991,9 @@ class Payment_Form(tk.Toplevel):
         Label(self, text='ملاحظات',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.4,anchor= CENTER, width=int(width*0.14))
 
-        comment = StringVar()
-        entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.4,anchor= CENTER, width=int(width*0.4), height=50)
+        comment =  Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment.place(relx=.55, rely=.42,anchor= CENTER, width=int(width*0.4))
+
 
         Label(self, text='التاريخ',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.55,anchor= CENTER, width=int(width*0.14))
@@ -748,12 +1009,14 @@ class Payment_Form(tk.Toplevel):
                         amount.get() and name.get()
                 except:
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-                        # self.destroy()
-                        return      
+                        print('invalid name or amount')
+                        return False 
+
                 if amount.get() == '' or amount.get() == None :
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة المدفوع بطريقه صحيحه ')
-                        # self.destroy()
-                        return
+                        print('no amount')
+                        return False
+
                 if name.get() == '':
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة الاسم بطريقه صحيحه ')
                         # self.destroy()
@@ -764,88 +1027,97 @@ class Payment_Form(tk.Toplevel):
                         ws = wb[name.get()]
                 except:
                         messagebox.showerror('Not Exists!','الاسم غير موجود') 
+                        print('Clients sheet not exists')
+                        return False
                         # self.destroy()
 
-                finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
-                inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
-                # check if transaction needs to be sorted by comparing date
-                exists_dates = []
-                for i in range (4, ws.max_row+1):
-                        try:
-                                exists_dates.append(date(
-                                ws.cell(column=7, row=i).value,
-                                ws.cell(column=8, row=i).value,
-                                ws.cell(column=9, row=i).value,))
-                        except:
-                                continue
-                # if transaction needs to be sorted
-                for cell_date in exists_dates:
-                        if inserted_date < cell_date:
-                        # add all transactions to rows_list
-                                rows_list = []
-                                for i in range (4, ws.max_row+1):
-                                        try:
-                                                cur_row_date = date(
-                                                        ws.cell(column=7, row=i).value,
-                                                        ws.cell(column=8, row=i).value,
-                                                        ws.cell(column=9, row=i).value,)
-                                        except:
-                                                continue        
-                                        cur_row = [    
-                                        ws.cell(column=1, row=i).value,
-                                        ws.cell(column=2, row=i).value,
-                                        ws.cell(column=3, row=i).value,
-                                        ws.cell(column=4, row=i).value,
-                                        ws.cell(column=5, row=i).value,
-                                        ws.cell(column=6, row=i).value,
+                else:   
+                        finalAmount = ws.cell(column=5, row=ws.max_row).value
+                        if type(finalAmount) == str or finalAmount == 0 or finalAmount == None:
+                                finalAmount = 0  
+                        
+                        inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
+                        # check if transaction needs to be sorted by comparing date
+                        exists_dates = []
+                        for i in range (4, ws.max_row+1):
+                                try:
+                                        exists_dates.append(date(
                                         ws.cell(column=7, row=i).value,
                                         ws.cell(column=8, row=i).value,
-                                        ws.cell(column=9, row=i).value,
-                                        cur_row_date]
+                                        ws.cell(column=9, row=i).value,))
+                                except:
+                                        continue
+                        flag = False        
+                        # if transaction needs to be sorted
+                        for cell_date in exists_dates:
+                                if inserted_date < cell_date:
+                                # add all transactions to rows_list
+                                        rows_list = []
+                                        for i in range (4, ws.max_row+1):
+                                                try:
+                                                        cur_row_date = date(
+                                                                ws.cell(column=7, row=i).value,
+                                                                ws.cell(column=8, row=i).value,
+                                                                ws.cell(column=9, row=i).value,)
+                                                except:
+                                                        continue        
+                                                cur_row = [    
+                                                ws.cell(column=1, row=i).value,
+                                                ws.cell(column=2, row=i).value,
+                                                ws.cell(column=3, row=i).value,
+                                                ws.cell(column=4, row=i).value,
+                                                ws.cell(column=5, row=i).value,
+                                                ws.cell(column=6, row=i).value,
+                                                ws.cell(column=7, row=i).value,
+                                                ws.cell(column=8, row=i).value,
+                                                ws.cell(column=9, row=i).value,
+                                                cur_row_date]
 
-                                        rows_list.append(cur_row)
-                                
-                                rows_list.append([c_date.get_date().strftime("%d/%m/%Y"),
-                                        '-',0,
-                                        amount.get(),
-                                        finalAmount - amount.get(),
-                                        comment.get(),
-                                        c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date]) 
-                                rows_list.sort(key=lambda x : x[9])
-                                # delete rows 
-                                ws.delete_rows(4, ws.max_row)
-                                #add sorted rows
-                                ws.append([rows_list[0][0],rows_list[0][1],rows_list[0][2],rows_list[0][3],int(rows_list[0][2])-int(rows_list[0][3]),rows_list[0][5],rows_list[0][6],rows_list[0][7],rows_list[0][8],rows_list[0][9]])
-                                
-                                rows_list.pop(0)
-                                for row in rows_list:
-                                        try:
-                                                ws.append([row[0],row[1],row[2],row[3],int(row[2])-int(row[3])+int(ws.cell(column=5,row=ws.max_row).value),row[5],row[6],row[7],row[8],row[9]])
-                                        except:
-                                                continue
-                                wb.save(file)
-                                # self.destroy()
-                                messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                                break
+                                                rows_list.append(cur_row)
+                                        
+                                        rows_list.append([c_date.get_date().strftime("%d/%m/%Y"),
+                                                '-',0,
+                                                amount.get(),
+                                                finalAmount - amount.get(),
+                                                comment.get("1.0",END),
+                                                c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date]) 
+                                        rows_list.sort(key=lambda x : x[9])
+                                        # delete rows 
+                                        ws.delete_rows(4, ws.max_row)
+                                        #add sorted rows
+                                        ws.append([rows_list[0][0],rows_list[0][1],rows_list[0][2],rows_list[0][3],int(rows_list[0][2])-int(rows_list[0][3]),rows_list[0][5],rows_list[0][6],rows_list[0][7],rows_list[0][8],rows_list[0][9]])
+                                        
+                                        rows_list.pop(0)
+                                        for row in rows_list:
+                                                try:
+                                                        ws.append([row[0],row[1],row[2],row[3],int(row[2])-int(row[3])+int(ws.cell(column=5,row=ws.max_row).value),row[5],row[6],row[7],row[8],row[9]])
+                                                except:
+                                                        continue
+                                        wb.save(file)
+                                        flag = True
+                                        self.destroy()
+                                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                                        break
 
-                for cell_date in exists_dates:
-                        if not inserted_date < cell_date:
+                        if flag == False:
                                 finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
+                                if type(finalAmount) == str or finalAmount == 0 or finalAmount == None:
+                                        finalAmount = 0       
                                 ws.append([c_date.get_date().strftime("%d/%m/%Y"),
                                         '-', 0,
                                         amount.get(),
                                         finalAmount - amount.get(), 
-                                        comment.get(),
+                                        comment.get("1.0",END),
                                         c_date.get_date().year, c_date.get_date().month, c_date.get_date().day, inserted_date])
                                 wb.save(file)
-                                # self.destroy()
+                                self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
-                                
+
+
         Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
                 command=payment).place(relx=.5, rely=.9,anchor= CENTER)
-        
         
         Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
         activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
@@ -864,14 +1136,11 @@ class Search(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه':
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
 
-        if len(entries) < 1:
-                entries.append('لا يوجد عملاء') 
 
-        
-        def check_input(event):
+        def search_input(event):
                 value = event.widget.get()
                 if value == '':
                         menu['values'] = entries
@@ -892,18 +1161,17 @@ class Search(tk.Toplevel):
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu.place(relx=.5, rely=.4,anchor= CENTER, width=int(width*0.47))
-        menu['values'] = entries
-        menu.bind('<KeyRelease>', check_input)
+        menu.bind('<KeyRelease>', search_input)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.637, rely=.45,anchor= CENTER)
 
 
-        flag = False
         def search():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=100,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -927,20 +1195,14 @@ class Search(tk.Toplevel):
                 treev.heading("2", text ="الرصيد")
                 treev.heading("1", text ="الملاحظات")
 
-                
-                def OnDoubleClick(event):
-                        item = treev.selection()[0]
-                        ws.delete_rows(treev.item(item,"text"),1)
-                        treev.delete(item)
-                        wb.save(file)
-
-                treev.bind("<d>", OnDoubleClick)
-
+        
                 try:
                         ws = wb[name.get()]
                 except:
-                        # self.destroy()
-                        messagebox.showerror('Not Exists!','الاسم غير موجود')                 
+                        messagebox.showerror('Not Exists!','الاسم غير موجود') 
+                        print('Clients sheet do not exists')
+                        return False       
+                        
                 for i in range (4, ws.max_row+1):
                         if (ws.cell(row=i,column=1).value) != None:
                                 if i%2 == 0:
@@ -964,16 +1226,65 @@ class Search(tk.Toplevel):
                         
                 treev.tag_configure('odd', background='#e1dddd', font=('Helvetica', 22)) 
                 treev.tag_configure('even', background= '#f5f3f3', font=('Helvetica', 22))
-        self.title( name.get())
+
+                def OnDelete(event):
+                        response = messagebox.askquestion('Delete!', f'هل انت متأكد من حذف هذه المعامله؟')
+                        if response == 'yes' :
+                                item = treev.selection()[0]
+                                ws.delete_rows(treev.item(item,"text"),1)
+                                treev.delete(item)
+                                wb.save(file)
+                                rows_list = []
+                                for i in range (4, ws.max_row+1):
+                                        try:
+                                                cur_row_date = date(
+                                                        ws.cell(column=7, row=i).value,
+                                                        ws.cell(column=8, row=i).value,
+                                                        ws.cell(column=9, row=i).value,)
+                                        except:
+                                                continue        
+                                        cur_row = [    
+                                        ws.cell(column=1, row=i).value,
+                                        ws.cell(column=2, row=i).value,
+                                        ws.cell(column=3, row=i).value,
+                                        ws.cell(column=4, row=i).value,
+                                        ws.cell(column=5, row=i).value,
+                                        ws.cell(column=6, row=i).value,
+                                        ws.cell(column=7, row=i).value,
+                                        ws.cell(column=8, row=i).value,
+                                        ws.cell(column=9, row=i).value,
+                                        cur_row_date]
+
+                                        rows_list.append(cur_row)
+                                # sort rows_list by date
+                                if len(rows_list) > 0:
+                                        rows_list.sort(key=lambda x : x[9])
+                                        # delete rows 
+                                        ws.delete_rows(4, ws.max_row)
+                                        #add sorted rows
+                                        ws.append([rows_list[0][0],rows_list[0][1],rows_list[0][2],rows_list[0][3],int(rows_list[0][2])-int(rows_list[0][3]),rows_list[0][5],rows_list[0][6],rows_list[0][7],rows_list[0][8],rows_list[0][9]])
+                                        rows_list.pop(0)
+                                        for row in rows_list:
+                                                try:
+                                                        ws.append([row[0],row[1],row[2],row[3],row[2]-row[3]+int(ws.cell(column=5,row=ws.max_row).value),row[5],row[6],row[7],row[8],row[9],])
+                                                except:
+                                                        continue
+                                        wb.save(file)
+
+                                self.destroy()
+                                messagebox.showinfo('Done!','تم الحذف')
+                        else:
+                                return False      
+                                
+                treev.bind("<d>", OnDelete)
+                self.title( name.get())
                 
-
-
 
         def clients():
                 treev = ttk.Treeview(self, selectmode ='browse', style="mystyle.Treeview", height=height)
                 treev.pack()
                 style = ttk.Style()
-                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=50,
+                style.configure("mystyle.Treeview", background = '#E5E8C7' ,rowheight=100,
                 highlightthickness=0, bd=0, font=('Helvetica', 14)) 
                 style.configure("mystyle.Treeview.Heading", font=('Helvetica', 20,'bold')) 
                 style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) 
@@ -1064,18 +1375,21 @@ class Client_Form(tk.Toplevel):
 
         name = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=name, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.825, rely=.17,anchor= CENTER, width=int(width*0.3))
+        entry1.place(relx=.75, rely=.17,anchor= CENTER, width=int(width*0.4))
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.92, rely=.22,anchor= CENTER)
 
         Label(self, text='الكود',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.1,anchor= CENTER, width=int(width*0.138))
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.4, rely=.1,anchor= CENTER, width=int(width*0.138))
 
         code = IntVar()
         entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.17,anchor= CENTER, width=int(width*0.138))
+        entry1.place(relx=.4, rely=.17,anchor= CENTER, width=int(width*0.138))
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.51, rely=.22,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.4, rely=.22,anchor= CENTER)
+
 
         Label(self, text='رقم التسجيل',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.1, rely=.1,anchor= CENTER, width=int(width*0.138))
@@ -1086,27 +1400,30 @@ class Client_Form(tk.Toplevel):
 
 
         Label(self, text='رقم التليفون',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.7,anchor= CENTER, width=int(width*0.138))
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.75,anchor= CENTER, width=int(width*0.138))
 
         phone = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=phone, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.78, rely=.77,anchor= CENTER, width=int(width*0.4))
+        entry1.place(relx=.78, rely=.8,anchor= CENTER, width=int(width*0.4))
 
 
         Label(self, text='العنوان',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.375, rely=.7,anchor= CENTER, width=int(width*0.138))
-
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.375, rely=.75,anchor= CENTER, width=int(width*0.138))
 
         address = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=address, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.25, rely=.77,anchor= CENTER, width=int(width*0.4))
+        entry1.place(relx=.25, rely=.8,anchor= CENTER, width=int(width*0.4))
 
 
         Label(self, text='الخدمه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.3,anchor= CENTER, width=int(width*0.138))
 
+        services = []
+        ws = wb['الخدمات']
+        for row in range(1,ws.max_row+1):
+                if ws.cell(column=1, row=row).value != None or ws.cell(column=1, row=row).value != '':
+                        services.append(ws.cell(column=1, row=row).value)
 
-        
         def check_input_services(event):
                 value = event.widget.get()
                 if value == '':
@@ -1123,21 +1440,22 @@ class Client_Form(tk.Toplevel):
         menu2 = ttk.Combobox(self, textvariable = service, font=('Helvetica', 20,'bold'), values = services) 
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
-        menu2.place(relx=.835, rely=.37,anchor= CENTER, width=int(width*0.2777))
+        menu2.place(relx=.75, rely=.37,anchor= CENTER, width=int(width*0.43))
         menu2.bind('<KeyRelease>', check_input_services)
 
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.912, rely=.42,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.93, rely=.42,anchor= CENTER)
         
 
         Label(self, text='التكلفه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.5, rely=.3,anchor= CENTER, width=int(width*0.138))
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.4, rely=.3,anchor= CENTER, width=int(width*0.138))
 
         cost = IntVar()
         entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.5, rely=.37,anchor= CENTER, width=int(width*0.138))
+        entry1.place(relx=.4, rely=.37,anchor= CENTER, width=int(width*0.138))
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
-        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.51, rely=.42,anchor= CENTER)
+        bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.4, rely=.42,anchor= CENTER)
 
 
         Label(self, text='المدفوع',
@@ -1146,6 +1464,7 @@ class Client_Form(tk.Toplevel):
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.1, rely=.37,anchor= CENTER, width=int(width*0.138))
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.11, rely=.42,anchor= CENTER)
         
@@ -1153,9 +1472,9 @@ class Client_Form(tk.Toplevel):
         Label(self, text='ملاحظات',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.9, rely=.5,anchor= CENTER, width=int(width*0.138))
 
-        comment = StringVar()
-        entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.78, rely=.57,anchor= CENTER, width=int(width*0.4),)
+        comment = Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment.place(relx=.78, rely=.62,anchor= CENTER, width=int(width*0.4),)
+
 
         Label(self, text='التاريخ',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.375, rely=.5,anchor= CENTER, width=int(width*0.138))
@@ -1169,7 +1488,7 @@ class Client_Form(tk.Toplevel):
         
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه':
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'مصروفات اداريه' or sheet.title != 'الخدمات':
                         entries.append(str(sheet.cell(row=1,column=1).value)) 
 
         codeentries = []
@@ -1182,50 +1501,46 @@ class Client_Form(tk.Toplevel):
                 try:
                         name.get() and code.get() and record.get() and service.get() and cost.get() and amount.get() and phone.get() and address.get() and comment.get()
                 except:
-                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
-                        return
+                        print('Invalid Inputs')
+                        return False
 
                 # not None Validation
                 if name.get() == None or code.get() == None or service.get() == None or cost.get() == None or amount.get() == None :
-                        # self.destroy()
-                        messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ') 
-                        return        
+                        print('None Inputs')        
+                        return False
 
                 # not "" validation        
                 if name.get() == "" or service.get() == "" :
-                        # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك نأكد من ادخال الاسم و الخدمه ') 
-                        return
+                        print('No Name or Service')
+                        return False
 
-                # String validation  
-                if not name.get().isalpha() and service.get().isalpha():
-                        # self.destroy()
-                        messagebox.showerror('Invalid!','من فضلك نأكد من ادخال الاسم و الخدمه بطريقه صحيحه ') 
-                        return   
-                
                 # phone validation
                 if not phone.get().isnumeric:
                         # self.destroy()
                         messagebox.showerror('Invalid!','من فضلك نأكد من ادخال التليفون بطريقه صحيحه ') 
-                        return  
+                        print('invalid Phone')  
+                        return False
 
                 # Case validations
                 if name.get() in entries :
-                        # self.destroy()
                         messagebox.showerror('Already Exists!','الاسم موجود بالفعل ') 
-                        return
+                        print('Name Exists')
+                        return False
+
                 if code.get() in codeentries:
-                        # self.destroy()
                         messagebox.showerror('Already Exists!','الكود موجود بالفعل ') 
-                        return
+                        print('Code Exists')
+                        return False
                 
                 if len(name.get()) > 26:
-                        # self.destroy()
                         messagebox.showerror('Error!','من فضلك استخدم اسم لا تزيد حروفه عن 23 حرف') 
-                        return
+                        print('Name is long')
+                        return False
                 
-                else:        
+                else:  
+                        # Create Client sheet      
                         ws = wb.create_sheet(f'{name.get()} ({code.get()})')
                         ws.title = f'{name.get()} ({code.get()})'
                         ws.append([name.get(), code.get(),str(record.get()),phone.get(),address.get()])
@@ -1236,19 +1551,18 @@ class Client_Form(tk.Toplevel):
                         cost.get(),
                         amount.get(), 
                         (cost.get()) - amount.get() ,
-                        comment.get(),
+                        comment.get("1.0",END),
                         c_date.get_date().year,c_date.get_date().month, c_date.get_date().day])
                         wb.save(file)
 
+                        # Create Clients Expenses sheet
                         ws0 = wb0.create_sheet(f'{name.get()} ({code.get()})')
                         ws0.title = f'{name.get()} ({code.get()})'
                         ws0.append([name.get(), code.get(),str(record.get()),phone.get(),address.get()])
                         ws0.append([])
                         ws0.append(['التاريخ', 'المبلغ','المصروف'])
                         wb0.save(file0)
-                        # wb0.close()
-
-                        # self.destroy()
+                        self.destroy()
                         messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
@@ -1275,7 +1589,7 @@ class Service_Form(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه':
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
                         
         Label(self, text='الاسم',
@@ -1301,12 +1615,19 @@ class Service_Form(tk.Toplevel):
         menu.place(relx=.55, rely=.1,anchor= CENTER, width=int(width*0.417))
         menu['values'] = entries
         menu.bind('<KeyRelease>', check_input_names)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.15,anchor= CENTER)
 
 
         Label(self, text='الخدمه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.22,anchor= CENTER, width=int(width*0.138))
+
+        services = []
+        ws = wb['الخدمات']
+        for row in range(1, ws.max_row+1):
+                if ws.cell(column=1, row=row).value != None or ws.cell(column=1, row=row).value != '':
+                        services.append(ws.cell(column=1, row=row).value)
 
         
         def check_input_services(event):
@@ -1327,6 +1648,7 @@ class Service_Form(tk.Toplevel):
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu2.place(relx=.55, rely=.22,anchor= CENTER, width=int(width*0.417))
         menu2.bind('<KeyRelease>', check_input_services)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.27,anchor= CENTER)
         
@@ -1337,6 +1659,7 @@ class Service_Form(tk.Toplevel):
         cost = IntVar()
         entry1 = ttk.Entry(self, textvariable=cost, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.55, rely=.34,anchor= CENTER, width=int(width*0.417), height=50)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.392,anchor= CENTER)
 
@@ -1347,6 +1670,7 @@ class Service_Form(tk.Toplevel):
         amount = IntVar()
         entry1 = ttk.Entry(self, textvariable=amount, justify = LEFT, font = ('fantasy', 25, 'bold'))
         entry1.place(relx=.55, rely=.58,anchor= CENTER, width=int(width*0.417), height=int(height*0.06))
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 10').place(relx=.69, rely=.63,anchor= CENTER)
         
@@ -1354,9 +1678,8 @@ class Service_Form(tk.Toplevel):
         Label(self, text='ملاحظات',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.8, rely=.7,anchor= CENTER, width=int(width*0.138))
 
-        comment = StringVar()
-        entry1 = ttk.Entry(self, textvariable=comment, justify = LEFT, font = ('fantasy', 25, 'bold'))
-        entry1.place(relx=.55, rely=.7,anchor= CENTER, width=int(width*0.417), height=int(height*0.06))
+        comment =  Text(self, font = ('fantasy', 25, 'bold'), height=3)
+        comment.place(relx=.55, rely=.73,anchor= CENTER, width=int(width*0.417))
 
 
         Label(self, text='التاريخ',
@@ -1372,37 +1695,38 @@ class Service_Form(tk.Toplevel):
                 try:
                         amount.get(), cost.get(), service.get(), name.get() 
                 except:
-                        self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ')
+                        print('Invalid inputs')
+                        return False
 
                 if cost.get() == '' or name.get() == '' or service.get() == '':
-                        self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات المطلوبه ')
-                        return
+                        print('Empty Inputs')
+                        return False
                 try:
                         cost.get() 
                 except:
-                        self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة التكلفه بطريقه صحيحه ')
-                        return
+                        print('Invalid Code')
+                        return False
 
                 try:
                         service.get() 
                 except:
-                        self.destroy()
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة الخدمه بطريقه صحيحه ')  
-                        return
-
-                finalAmount = 0
+                        print('Invalid Service')
+                        return False
+                        
                 try:
                         ws = wb[name.get()]
                 except:
-                        self.destroy()
-                        messagebox.showerror('Not Exists!','الاسم غير موجود')         
+                        messagebox.showerror('Not Exists!','الاسم غير موجود')
+                        print('')
+                        return False         
 
                 inserted_date = date(c_date.get_date().year,c_date.get_date().month, c_date.get_date().day)
                 exists_dates = []
-                        # check if transaction needs to be sorted by comparing date
+                # check if transaction needs to be sorted by comparing date
                 for i in range (4, ws.max_row+1):
                         try:
                                 exists_dates.append (date(
@@ -1412,6 +1736,7 @@ class Service_Form(tk.Toplevel):
                         except:
                                 continue
                 # if transaction needs to be sorted
+                flag = False
                 for cell_date in exists_dates:
                         if inserted_date < cell_date:
                                 # add all transactions to rows_list
@@ -1444,7 +1769,7 @@ class Service_Form(tk.Toplevel):
                                 cost.get(),
                                 amount.get(),
                                 (cost.get() - amount.get()),
-                                comment.get(),
+                                comment.get("1.0",END),
                                 c_date.get_date().year,c_date.get_date().month, c_date.get_date().day,
                                 inserted_date,])  
 
@@ -1463,33 +1788,34 @@ class Service_Form(tk.Toplevel):
                                         except:
                                                 continue
                                 wb.save(file)
+                                flag = True
                                 # self.destroy()
                                 messagebox.showinfo('Done','تم الحفظ بنجاح ')
                                 break 
 
                 # if transaction doesn't need to be sorted
-                for cell_date in exists_dates:
-                        if not inserted_date < cell_date:
-                                finalAmount = ws.cell(column=5,row=int(ws.max_row)).value  
-                                ws.append([c_date.get_date().strftime("%d/%m/%Y"),
-                                service.get(),
-                                cost.get(),
-                                amount.get(),
-                                ((int(finalAmount) + (cost.get()) - amount.get())),
-                                comment.get(),
-                                c_date.get_date().year,c_date.get_date().month, c_date.get_date().day,
-                                inserted_date,])
+                if flag == False:
+                        finalAmount = ws.cell(column=5,row=int(ws.max_row)).value
+                        if type(finalAmount) == str or finalAmount == 0 or finalAmount == None:
+                                finalAmount = 0           
+                        ws.append([c_date.get_date().strftime("%d/%m/%Y"),
+                        service.get(),
+                        cost.get(),
+                        amount.get(),
+                        ((int(finalAmount) + (cost.get()) - amount.get())),
+                        comment.get("1.0",END),
+                        c_date.get_date().year,c_date.get_date().month, c_date.get_date().day,
+                        inserted_date,])
 
-                                wb.save(file)
-                                # self.destroy()
-                                messagebox.showinfo('Done','تم الحفظ بنجاح ')
+                        wb.save(file)
+                        # self.destroy()
+                        messagebox.showinfo('Done','تم الحفظ بنجاح ')
 
         
         Button(self, height = 1, width = 10, bg = '#05659E', fg = 'white',
         activebackground='#43516C', font = 'fantasy 20 bold', bd = '4px solid #DBA531', 
                 text='حفظ',
                 command=addService).place(relx=.5, rely=.9,anchor= CENTER)
-        
         
         Button(self, height = 1, width = 8, bg = 'grey', fg = 'white',
         activebackground='#43516C', font = 'fantasy 15 bold', bd = '4px solid #DBA531', 
@@ -1508,11 +1834,9 @@ class Delete(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
+                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
+                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})') 
 
-        if len(entries) < 1:
-                entries.append('لا يوجد عملاء')   
 
         def check_input(event):
                 value = event.widget.get()
@@ -1526,6 +1850,7 @@ class Delete(tk.Toplevel):
 
                         menu['values'] = data
 
+
         Label(self, text='اسم العميل',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 20 bold').place(relx=.63, rely=.3,anchor= CENTER)
 
@@ -1534,8 +1859,8 @@ class Delete(tk.Toplevel):
         text_font = ('Courier New', '20', 'bold')
         app.option_add('*TCombobox*Listbox.font', text_font)
         menu.place(relx=.5, rely=.35,anchor= CENTER, width=int(width*0.55))
-        menu['values'] = entries
         menu.bind('<KeyRelease>', check_input)
+
         Label(self, text='.برجاء عدم ترك الخانه فارغه',
         bg = '#E5E8C7', fg = 'black' ,font = 'fantasy 12').place(relx=.64, rely=.4,anchor= CENTER)
 
@@ -1546,15 +1871,16 @@ class Delete(tk.Toplevel):
                                 del wb[name.get()]
                                 del wb0[name.get()]
                         except:
-                                self.destroy()
-                                messagebox.showerror('Not Exists!','الاسم غير موجود')         
-                        # self.destroy()
+                                messagebox.showerror('Not Exists!','الاسم غير موجود') 
+                                print('Invalid Name')
+                                return False        
+                        self.destroy()
                         messagebox.showinfo('Done!','تم الحذف بنجاح')
                         wb.save(file)
                         wb0.save(file0)
                 else :
-                        # self.destroy()
-                        messagebox.showinfo('Fail!', 'لم يتم الحذف')       
+                        messagebox.showinfo('Fail!', 'لم يتم الحذف')
+                        return False       
 
 
         Button(self, height = 1, width = 15, bg = 'red', fg = 'white',
@@ -1614,20 +1940,29 @@ class Main(tk.Tk):
                 text= 'المصروفات',
                 command=self.open_exp).place(relx=.5, rely=.85,anchor= CENTER)        
 
-        Button(self, height = 1, width = 10, bg = 'red', fg = 'white',
+        Button(self, height = 1, width = 12, bg = 'red', fg = 'white',
         activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
                 text='حذف',
-                command=self.open_delete).place(relx=.2, rely=.35,anchor= CENTER)
+                command=self.open_delete).place(relx=.2, rely=.85,anchor= CENTER)
+      
+        Button(self, height = 1, width = 12, bg = '#F1B93F', fg = 'black',
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
+                text='تعديل ملفات العملاء',
+                command=self.open_edit_client).place(relx=.2, rely=.6,anchor= CENTER) 
 
-        
-#         Button(self, height = 1, width = 10, bg = 'yellow', fg = 'white',
-#         activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
-#                 text='اضافه خدمه',
-#                 command=self.open_add_service).place(relx=.2, rely=.6,anchor= CENTER)        
+        Button(self, height = 1, width = 12, bg = '#F1B93F', fg = 'black',
+        activebackground='#43516C', font = 'fantasy 25 bold', bd = '8px solid #DBA531', 
+                text='تعديل قائمة الخدمات',
+                command=self.open_new_service).place(relx=.2, rely=.35,anchor= CENTER)                
 
-#     def open_add_service(self):
-#         window = Add_Service(self)
-#         window.grab_set() 
+
+    def open_new_service(self):
+        window = New_Service(self)
+        window.grab_set() 
+
+    def open_edit_client(self):
+        window = Edit_Client(self)
+        window.grab_set() 
 
     def open_exp(self):
                 window = Expenses_View(self)
