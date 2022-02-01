@@ -22,16 +22,23 @@ except:
         messagebox.showerror('Files Not Found!',' ملفات الاكسيل غير موجوده')
         print('Files do not exist')
 
+# if no Services sheet.
+services = ['اتعاب لجنه داخلية','اضافة سياره','اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
+        ,'اقرار ضرائب قيمه مضافه', 'اقرار ضرائب مرتبات', 'بطاقه ضريبيه'
+        ,'تجديد اشتراك البوابه الالكترونيه', 'تحت الحساب','تسوية ملف ضريبى', 'تعديل النشاط',
+        'جواب مرور', 'حفظ الملف بالضرائب','رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه'
+        ,'رسوم تجديد مستوردين', 'سجل تجارى','سداد ضرائب عامه'
+        , 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
+        ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
+        'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
+        'ميزانيه عموميه', 'نماذج 41 ض',]
 
-# services = ['اتعاب لجنه داخلية','اضافة سياره','اعداد و مراجعة ميزانيه','اقرار ضرائب عامه'
-#         ,'اقرار ضرائب قيمه مضافه', 'اقرار ضرائب مرتبات', 'بطاقه ضريبيه'
-#         ,'تجديد اشتراك البوابه الالكترونيه', 'تحت الحساب','تسوية ملف ضريبى', 'تعديل النشاط',
-#         'جواب مرور', 'حفظ الملف بالضرائب','رسوم استخراج مستوردين', 'رسوم البوابه الالكترونيه'
-#         ,'رسوم تجديد مستوردين', 'سجل تجارى','سداد ضرائب عامه'
-#         , 'سداد ضرائب قيمه مضافه','شطب سجل تجارى', 'شهاده بالموقف الضريبى'
-#         ,'شهادة دخل 1', 'شهادة دخل 2', 'عمل موقع الكترونى', 'غرفه تجاريه',
-#         'فحص ضرائب عامه', 'فحص ضريبة قيمه مضافه','لجنة طعن ضرائب عامه', 'مركز مالى',
-#         'ميزانيه عموميه', 'نماذج 41 ض',]
+try :
+        ws = wb['الخدمات']
+except:
+        ws = wb.create_sheet('الخدمات')
+        for service in services:
+                ws.append([service])
 
 
 # Fonts
@@ -56,7 +63,7 @@ class Edit_Client(tk.Toplevel):
         entries = []
         for sheet in wb.worksheets:
                 if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
+                        entries.append(sheet.title)
                         
         Label(self, text='اختر العميل',
         bg = baseColor, fg = labelColor ,font = font20 ).place(relx=.5, rely=.05,anchor= CENTER)
@@ -104,7 +111,7 @@ class Edit_Client(tk.Toplevel):
         Label(self, text='الكود',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.65,anchor= CENTER, width=int(width*0.138))
 
-        code = IntVar()
+        code = StringVar()
         entry1 = ttk.Entry(self, textvariable=code, justify = LEFT, font = font20)
         entry1.place(relx=.77, rely=.65,anchor= CENTER, width=int(width*0.138))
 
@@ -112,7 +119,7 @@ class Edit_Client(tk.Toplevel):
         Label(self, text='رقم التسجيل',
         bg = baseColor, fg = labelColor ,font = font20).place(relx=.9, rely=.75,anchor= CENTER, width=int(width*0.138))
 
-        record = tk.IntVar()
+        record = tk.StringVar()
         entry1 = ttk.Entry(self, textvariable=record, justify = LEFT, font = font20)
         entry1.place(relx=.77, rely=.75,anchor= CENTER, width=int(width*0.138))
 
@@ -179,14 +186,14 @@ class Edit_Client(tk.Toplevel):
                                 ws['A1'] = edit_name.get()
                                 ws.title = f'{edit_name.get()} ({ws["B1"].value})'
 
-                        if code.get() != 0: 
+                        if code.get() != '': 
                                 ws['B1'] = code.get()
                                 ws.title = f'{ws["A1"].value} ({code.get()})'
 
-                        if edit_name.get() != '' and code != 0:
+                        if edit_name.get() != '' and code.get() != '':
                                 ws.title = f'{edit_name.get()} ({code.get()})'        
 
-                        if record.get() != 0:        
+                        if record.get() != '':        
                                 ws['C1'] = record.get()
 
                         if phone.get() != '':
@@ -200,14 +207,14 @@ class Edit_Client(tk.Toplevel):
                                 ws0['A1'] = edit_name.get()
                                 ws0.title = f'{edit_name.get()} ({ws0["B1"].value})'
 
-                        if code.get() != 0: 
+                        if code.get() != '': 
                                 ws0['B1'] = code.get()
                                 ws0.title = f'{ws0["A1"].value} ({code.get()})'
 
-                        if edit_name.get() != '' and code != 0:
+                        if edit_name.get() != '' and code.get() != '':
                                 ws0.title = f'{edit_name.get()} ({code.get()})'
 
-                        if record.get() != 0:        
+                        if record.get() != '':        
                                 ws0['C1'] = record.get()
 
                         if phone.get() != '':
@@ -216,6 +223,7 @@ class Edit_Client(tk.Toplevel):
                         if address.get() != '':
                                 ws0['E1'] = address.get()
                         wb0.save(file0)
+                        self.destroy()
                         messagebox.showinfo('Done','تم التعديل بنجاح ')
 
 
@@ -453,7 +461,7 @@ class Expenses_View(tk.Toplevel):
                         c += 1
                         client_expenses = 0
                         ws = expenses_sheet
-                        if (ws.cell(row=1,column=1).value) != None or expenses_sheet.title != 'مصروفات اداريه' or expenses_sheet.title != 'الخدمات':
+                        if (ws.cell(row=1,column=1).value) != None and expenses_sheet.title != 'مصروفات اداريه':
                                 for i in range(4, ws.max_row+1):
                                         try:
                                                 celldate = date(
@@ -511,7 +519,7 @@ class Expenses_Form(tk.Toplevel):
         
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None or sheet.title != 'مصروفات اداريه' or sheet.title != 'الخدمات':
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'مصروفات اداريه' and sheet.title != 'الخدمات':
                         entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')                  
 
         Label(self, text='اسم العميل',
@@ -583,7 +591,7 @@ class Expenses_Form(tk.Toplevel):
                         print('No amount')
                         return False 
 
-                if comment.get() == '':
+                if comment.get("1.0",END) == '':
                         messagebox.showerror('Invalid!','من فضلك قم بادخال خانة المصروف ')
                         print('No Expense')
                         return False     
@@ -602,7 +610,7 @@ class Expenses_Form(tk.Toplevel):
                                         ws.append(['التاريخ', 'المبلغ','المصروف'])
                                         ws.append([c_date.get_date().strftime("%d/%m/%Y")
                                                                 ,amount.get()
-                                                                ,comment.get()
+                                                                ,comment.get("1.0",END)
                                                                 ,c_date.get_date().year
                                                                 ,c_date.get_date().month
                                                                 ,c_date.get_date().day,])
@@ -643,7 +651,7 @@ class Expenses_Form(tk.Toplevel):
                                                 
                                                 rows_list.append([c_date.get_date().strftime("%d/%m/%Y")
                                                         ,amount.get()
-                                                        ,comment.get()
+                                                        ,comment.get("1.0",END)
                                                         ,c_date.get_date().year
                                                         ,c_date.get_date().month
                                                         ,c_date.get_date().day, inserted_date]) 
@@ -666,7 +674,7 @@ class Expenses_Form(tk.Toplevel):
                                 if flag == False:
                                         ws.append([c_date.get_date().strftime("%d/%m/%Y")
                                                 ,amount.get()
-                                                ,comment.get()
+                                                ,comment.get("1.0",END)
                                                 ,c_date.get_date().year
                                                 ,c_date.get_date().month
                                                 ,c_date.get_date().day, inserted_date]) 
@@ -686,7 +694,7 @@ class Expenses_Form(tk.Toplevel):
                                 if ws.cell(row=4, column=1).value == None or ws.cell(row=4, column=1).value == '' :
                                         ws['A4'] = c_date.get_date().strftime("%d/%m/%Y")
                                         ws['B4'] = amount.get()
-                                        ws['C4'] = comment.get()
+                                        ws['C4'] = comment.get("1.0",END)
                                         ws['D4'] = c_date.get_date().year
                                         ws['E4'] = c_date.get_date().month
                                         ws['F4'] = c_date.get_date().day
@@ -731,7 +739,7 @@ class Expenses_Form(tk.Toplevel):
                                                         
                                                         rows_list.append([c_date.get_date().strftime("%d/%m/%Y")
                                                                 ,amount.get()
-                                                                ,comment.get()
+                                                                ,comment.get("1.0",END)
                                                                 ,c_date.get_date().year
                                                                 ,c_date.get_date().month
                                                                 ,c_date.get_date().day, inserted_date]) 
@@ -753,7 +761,7 @@ class Expenses_Form(tk.Toplevel):
                                         if flag == False:
                                                 ws.append([c_date.get_date().strftime("%d/%m/%Y")
                                                         ,amount.get()
-                                                        ,comment.get()
+                                                        ,comment.get("1.0",END)
                                                         ,c_date.get_date().year
                                                         ,c_date.get_date().month
                                                         ,c_date.get_date().day, inserted_date]) 
@@ -836,7 +844,7 @@ class Revenues_View(tk.Toplevel):
                         amount = 0
                         ws = client_sheet
                         c += 1
-                        if client_sheet.title != 'الخدمات' or client_sheet.title != 'المصروفات الاداريه':
+                        if client_sheet.title != 'الخدمات' and client_sheet.title != 'المصروفات الاداريه':
                                 for i in range(4, ws.max_row+1):
                                         try:
                                                 celldate = date(
@@ -976,8 +984,8 @@ class Payment_Form(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')                
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
+                        entries.append(sheet.title)                
 
 
         Label(self, text='الاسم',
@@ -1164,8 +1172,8 @@ class Search(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
+                        entries.append(sheet.title)
 
 
         def search_input(event):
@@ -1251,8 +1259,8 @@ class Search(tk.Toplevel):
                                                         '-' if (ws.cell(row=i,column=2).value) == None else str(ws.cell(row=i,column=2).value),
                                                         '-' if (ws.cell(row=i,column=1).value) == None else str(ws.cell(row=i,column=1).value)), tags = ('odd',))                        
                         
-                treev.tag_configure('odd', background='#e1dddd', font=font22) 
-                treev.tag_configure('even', background= '#f5f3f3', font=font22)
+                treev.tag_configure('odd', background='#e1dddd', font=font18) 
+                treev.tag_configure('even', background= '#f5f3f3', font=font18)
 
                 def OnDelete(event):
                         response = messagebox.askquestion('Delete!', f'هل انت متأكد من حذف هذه المعامله؟')
@@ -1525,7 +1533,7 @@ class Client_Form(tk.Toplevel):
         def insertClient():
                 # get() validation
                 try:
-                        name.get() and code.get() and record.get() and service.get() and cost.get() and amount.get() and phone.get() and address.get() and comment.get()
+                        name.get() and code.get() and record.get() and service.get() and cost.get() and amount.get() and phone.get() and address.get() and comment.get("1.0",END)
                 except:
                         messagebox.showerror('Invalid!','من فضلك قم بادخال الخانات بطريقه صحيحه ') 
                         print('Invalid Inputs')
@@ -1615,8 +1623,8 @@ class Service_Form(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})')
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
+                        entries.append(sheet.title)
                         
         Label(self, text='الاسم',
         bg = baseColor, fg = labelColor ,font = font20 ).place(relx=.8, rely=.1,anchor= CENTER, width=int(width*0.138))
@@ -1858,8 +1866,8 @@ class Delete(tk.Toplevel):
 
         entries = []
         for sheet in wb.worksheets:
-                if sheet.cell(row=1,column=1).value != None or sheet.title != 'الخدمات':
-                        entries.append(f'{str(sheet.cell(row=1,column=1).value)} ({str(sheet.cell(row=1,column=2).value)})') 
+                if sheet.cell(row=1,column=1).value != None and sheet.title != 'الخدمات':
+                        entries.append(sheet.title) 
 
 
         def check_input(event):
